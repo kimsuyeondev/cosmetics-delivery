@@ -11,7 +11,6 @@ public class MainController {
     public JSONObject helloCosmetics2() {
         JSONObject obj = new JSONObject();
         obj.put("say","Hello");
-
         return obj;
     }
 }
