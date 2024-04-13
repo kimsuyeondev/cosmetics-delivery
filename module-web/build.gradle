@@ -1,0 +1,12 @@
+plugins {
+}
+
+dependencies {
+    implementation project(path: ':module-core')
+    implementation project(path: ':module-api')
+}
+
+//어플리케이션 실행에 필요한 모든 의존성을 빌드한다.
+//bootJar는 jar를 확장하여 만든 것
+tasks.jar { enabled = false }
+tasks.bootJar { enabled = true }

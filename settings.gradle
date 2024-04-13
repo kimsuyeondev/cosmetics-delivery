@@ -1,1 +1,5 @@
 rootProject.name = 'cosmetics'
+include 'module-api'
+include 'module-core'
+include 'module-web'
+

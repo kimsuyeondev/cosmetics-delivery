@@ -1,0 +1,8 @@
+plugins {
+}
+
+dependencies {
+}
+//어플리케이션 실행에 필요한 모든 의존성을 포함하지 않고 클래스파일과 리소스 파일만 포함
+tasks.jar { enabled = true }
+tasks.bootJar { enabled = false }
