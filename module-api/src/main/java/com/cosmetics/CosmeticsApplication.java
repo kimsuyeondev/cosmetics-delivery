@@ -1,10 +1,9 @@
-package com.hello.cosmetics;
+package com.cosmetics;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.cosmetics")
 public class CosmeticsApplication {
 
 	public static void main(String[] args) {
