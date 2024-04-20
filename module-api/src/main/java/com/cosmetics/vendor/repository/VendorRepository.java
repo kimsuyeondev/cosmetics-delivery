@@ -30,6 +30,13 @@ public class VendorRepository {
         return vendorMap.get(vendorId);
     };
 
+    public void deleteVendor(String vendorId){
+        vendorMap.remove(vendorId);
+    }
 
+    public void deleteVendors(){
+        vendorMap = new HashMap<>();
+        sequence = 0L;
+    }
 
 }

@@ -48,7 +48,17 @@ public class VendorController {
     }
 
     @DeleteMapping(value = "/{vendorId}")
-    public ResponseEntity<Void> deleteVendor(@PathVariable Long vendorId) {
+    public ResponseEntity<Void> deleteVendor(@PathVariable String vendorId) {
+        vendorRepository.deleteVendor(vendorId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * VendorApiApplication 테스트 시 초기화가 안되서 추가함..
+     * */
+    @DeleteMapping
+    public ResponseEntity<Void> deleteVendors() {
+        vendorRepository.deleteVendors();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
