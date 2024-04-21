@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -57,7 +58,6 @@ public class GoodsApiApplicationTest {
     @Order(1)
     public void 상품등록() throws Exception{
         String url = "http://localhost:8080/v1/goods";
-        System.out.println("1");
         ResponseEntity<GoodsMgmt> responseEntity = testRestTemplate.postForEntity(url, goodsMgmt, GoodsMgmt.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -69,7 +69,6 @@ public class GoodsApiApplicationTest {
     @Test
     @Order(2)
     public void 상품조회() throws Exception{
-        System.out.println("2");
         String url = "http://localhost:8080/v1/goods/{goodsNo}";
         ResponseEntity<GoodsMgmt> responseEntity = testRestTemplate.getForEntity(url, GoodsMgmt.class, "240501100002");
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -80,15 +79,13 @@ public class GoodsApiApplicationTest {
         System.out.println(json);
     }
 
-/* //테스트 시, 초기화가 안되서 계속 상품번호인 sequnce를 올려야되는데 상품삭제 컨트롤러를 만들어야 할까?
     @DisplayName("상품삭제")
     @Test
     @Order(3)
-    public void 전체삭제() throws Exception{
-        System.out.println("3");
-        String url = "http://localhost:8080/v1/goods";
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Void.class);
+    public void 상품삭제() throws Exception{
+        String url = "http://localhost:8080/v1/goods/{goodsNo}";
+        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, "240501100002");
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
     }
-*/
 }

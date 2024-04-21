@@ -8,6 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,14 +58,15 @@ public class VendorApiApplicationTest {
         System.out.println(json);
     }
 
-    @DisplayName("업체전체초기화")
+    @DisplayName("업체삭제")
     @Test
     @Order(3)
-    public void 전체삭제() throws Exception{
+    public void 업체삭제() throws Exception{
         System.out.println("3");
-        String url = "http://localhost:8080/v1/vendor";
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Void.class);
+        String url = "http://localhost:8080/v1/vendor/{vendorId}";
+        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, "lv202400001");
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
     }
 
 }

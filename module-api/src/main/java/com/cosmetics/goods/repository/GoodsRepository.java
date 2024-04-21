@@ -29,4 +29,22 @@ public class GoodsRepository {
         return goodsMap.get(goodsNo);
     };
 
+    public void deleteGoods(String goodsNo, Map<String, String> resultMap) {
+        if(!goodsMap.containsKey(goodsNo)){
+            resultMap.put("resultCode", "-0001");
+            resultMap.put("retMsg", "존재하지 않는 상품입니다.");
+            return;
+        }
+
+        goodsMap.remove(goodsNo);
+
+        if(goodsMap.containsKey(goodsNo)){
+            resultMap.put("resultCode", "-1111");
+            resultMap.put("retMsg", "삭제실패");
+        }else{
+            resultMap.put("resultCode", "0000");
+            resultMap.put("retMsg", "삭제성공");
+        }
+    }
+
 }
