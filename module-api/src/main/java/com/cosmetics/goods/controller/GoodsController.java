@@ -17,7 +17,6 @@ public class GoodsController {
 
     @GetMapping(value = "/{goodsNo}")
     public ResponseEntity<GoodsMgmt> findGoods(@PathVariable String goodsNo) {
-        System.out.println(goodsNo);
         GoodsMgmt goodsMgmt = goodsRepository.findGoods(goodsNo);
         return new ResponseEntity<>(goodsMgmt, HttpStatus.OK);
     }
@@ -33,6 +32,13 @@ public class GoodsController {
         System.out.println(goodsMgmt.getItem().get(0).getItemNm());
         System.out.println(goodsMgmt.getItem().get(1).getItemNm());
         return new ResponseEntity<>(resultMap, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/{goodsNo}")
+    public ResponseEntity<Map<String,String>> deleteGoods(@PathVariable String goodsNo) {
+        Map<String,String> resultMap = new HashMap<>();
+        goodsRepository.deleteGoods(goodsNo, resultMap);
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
 }

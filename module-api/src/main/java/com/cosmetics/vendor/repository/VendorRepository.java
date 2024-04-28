@@ -30,6 +30,22 @@ public class VendorRepository {
         return vendorMap.get(vendorId);
     };
 
+    public void deleteVendor(String vendorId, Map<String, String> resultMap){
+        if(!vendorMap.containsKey(vendorId)){
+            resultMap.put("resultCode", "-0001");
+            resultMap.put("retMsg", "존재하지 않는 업체입니다.");
+            return;
+        }
 
+        vendorMap.remove(vendorId);
+
+        if(vendorMap.containsKey(vendorId)){
+            resultMap.put("resultCode", "-1111");
+            resultMap.put("retMsg", "삭제실패");
+        }else{
+            resultMap.put("resultCode", "0000");
+            resultMap.put("retMsg", "삭제성공");
+        }
+    }
 
 }
