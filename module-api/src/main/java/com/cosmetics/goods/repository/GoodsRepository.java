@@ -1,16 +1,22 @@
 package com.cosmetics.goods.repository;
 
 import com.cosmetics.goods.GoodsMgmt;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
 /*
     API Spec 및 컨트롤러 작성을 위해 임시적으로 싱글톤 작성하였습니다.
 * */
-
+@Repository
 public class GoodsRepository {
-    private static Map<String, GoodsMgmt> goodsMap = new HashMap<>();
+    private static Map<String, GoodsMgmt> goodsMap = new ConcurrentHashMap<>();
 
-    private static long sequence = 0L;
+    private static AtomicLong sequence = new AtomicLong();
 
     private static final GoodsRepository instance = new GoodsRepository();
 
@@ -19,7 +25,7 @@ public class GoodsRepository {
     }
 
     public GoodsMgmt save(GoodsMgmt goodsMgmt){
-        String goodsNo = "24050110000" + ++sequence;
+        String goodsNo = "24050110000" + sequence.incrementAndGet();
         goodsMgmt.setGoodsNo(goodsNo);
         goodsMap.put(goodsNo, goodsMgmt);
         return goodsMgmt;

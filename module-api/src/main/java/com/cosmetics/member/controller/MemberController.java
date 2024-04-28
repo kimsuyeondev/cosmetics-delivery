@@ -1,7 +1,11 @@
 package com.cosmetics.member.controller;
 
+import com.cosmetics.goods.service.GoodsService;
 import com.cosmetics.member.MemberMgmt;
 import com.cosmetics.member.repository.MemberRepository;
+import com.cosmetics.member.service.MemberService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +15,20 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1/member")
+@Slf4j
 public class MemberController {
 
-    /** API Spec 및 컨트롤러 작성을 위해 임시적으로 싱글톤 작성하였습니다. */
-    MemberRepository memberRepository = MemberRepository.getInstance();
+    private final MemberService memberService;
+
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @GetMapping(value = "/{memberId}")
     public ResponseEntity<MemberMgmt> findMember(@PathVariable String memberId) {
-        System.out.println(memberId);
-        MemberMgmt memberMgmt = memberRepository.findMember(memberId);
+        log.info(memberId);
+        MemberMgmt memberMgmt = memberService.findMember(memberId);
         return new ResponseEntity<>(memberMgmt, HttpStatus.OK);
     }
 
@@ -27,10 +36,8 @@ public class MemberController {
     public ResponseEntity<Map<String,String>> registerMember(@RequestBody MemberMgmt memberMgmt) {
         Map<String,String> resultMap = new HashMap<>();
         resultMap.put("resultCode","0000");
-        memberRepository.save(memberMgmt);
+        memberService.save(memberMgmt);
         resultMap.put("memberId", memberMgmt.getMemberId());
-
-        System.out.println(memberMgmt.getMemberNm());
         return new ResponseEntity<>(resultMap, HttpStatus.CREATED);
     }
 
