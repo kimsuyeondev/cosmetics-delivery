@@ -4,7 +4,9 @@ import com.cosmetics.goods.GoodsMgmt;
 import com.cosmetics.goods.service.GoodsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -19,8 +21,8 @@ public class GoodsController {
     private final GoodsService goodsService;
 
     @GetMapping(value = "/{goodsNo}")
-    @ResponseStatus(HttpStatus.OK)
-    public GoodsMgmt findGoods(@PathVariable String goodsNo) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public GoodsMgmt findGoods(@PathVariable String goodsNo) throws Exception {
         return goodsService.findGoods(goodsNo);
     }
 
