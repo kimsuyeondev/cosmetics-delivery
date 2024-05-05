@@ -4,9 +4,14 @@ plugins {
 apply plugin: 'io.freefair.lombok'
 
 dependencies {
-    implementation project(path: ':module-core')
+    implementation project(':module-domain')
+    implementation project(':module-core')
+    //확인필요 test는 최상위로 올렸음 원래 위의 implementation project를 하면 의존성도 주입되는게 아닌가요?
+    // module-domain 에 web이랑 spring-boot-starter-test'를 해보았는데 api에 의존성이 안됩니다.
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    /*벨리데이션*/
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     /*로그*/
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.13'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'

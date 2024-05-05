@@ -1,10 +1,13 @@
 package com.cosmetics.goods;
 
-import org.apache.coyote.BadRequestException;
+import com.cosmetics.domain.goods.dto.GoodsItemManagement;
+import com.cosmetics.domain.goods.dto.GoodsManagement;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,99 +17,89 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Slf4j
 public class GoodsApiApplicationTest {
+    @LocalServerPort
+    private int port;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    GoodsMgmt goodsMgmt = new GoodsMgmt();
-
-    @BeforeEach
-    public void setUp() throws Exception{
-        goodsMgmt.setCategory("스킨케어");
-        goodsMgmt.setGoodsNm("닥터스킨");
-        goodsMgmt.setMarketPrice(15000);
-        goodsMgmt.setSalePrice(12000);
-        goodsMgmt.setSupplyPrice(10000);
-        goodsMgmt.setVendorId("lv202400002");
-        goodsMgmt.setStockQty(80);
-        goodsMgmt.setBrandNm("닥터펫");
-        goodsMgmt.setSaleStartDtime("2024-05-01 00:00:00");
-        goodsMgmt.setSaleEndDtime("2024-08-01 00:00:00");
-        goodsMgmt.setImage("https://cdn.localhost:8081/images/lv202400002/goods/image_1.png");
-        goodsMgmt.setAddImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png");
-
+    private static GoodsManagement requestGoods() {
         //item
-        List<GoodsItem> items = new ArrayList<>();
-        GoodsItem item = new GoodsItem();
-        item.setItemNm("건성용");
-        item.setItemQty(50);
-        items.add(item);
-        item = new GoodsItem();
-        item.setItemNm("지성용");
-        item.setItemQty(30);
-        items.add(item);
-        goodsMgmt.setItem(items);
+        List<GoodsItemManagement> items = new ArrayList<>();
+
+        items.add(GoodsItemManagement.builder()
+                .itemNm("건성용")
+                .itemQty(50).build());
+        items.add(GoodsItemManagement.builder()
+                .itemNm("지성용")
+                .itemQty(30).build());
+
+        return GoodsManagement.builder()
+                .category("스킨케어")
+                .goodsNm("닥터스킨")
+                .marketPrice(15000)
+                .salePrice(12000)
+                .supplyPrice(10000)
+                .vendorId("lv202400002")
+                .stockQty(80)
+                .brandNm("닥터펫")
+                .saleStartDtime("2024-05-01 00:00:00")
+                .saleEndDtime("2024-08-01 00:00:00")
+                .image("https://cdn.localhost:8081/images/lv202400002/goods/image_1.png")
+                .addImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png")
+                .item(items)
+                .build();
     }
 
     @DisplayName("상품등록")
     @Test
     @Order(1)
     public void 상품등록() throws Exception{
-        String url = "http://localhost:8080/v1/goods";
-        ResponseEntity<Map> responseEntity = testRestTemplate.postForEntity(url, goodsMgmt, Map.class);
+        String url = "http://localhost:" + port + "/v1/goods";
+        GoodsManagement goodsManagement = requestGoods();
+        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.postForEntity(url, goodsManagement, GoodsManagement.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertNotNull(responseEntity.getBody().get("goodsNo"));
-        assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
+        assertNotNull(responseEntity.getBody().getGoodsNo());
+        assertThat(responseEntity.getBody().getResultCode()).isEqualTo("0000");
     }
 
     @DisplayName("상품조회")
     @Test
     @Order(2)
     public void 상품조회() throws Exception{
-        String url = "http://localhost:8080/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsMgmt> responseEntity = testRestTemplate.getForEntity(url, GoodsMgmt.class,"240501100002");
+        String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
+        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.getForEntity(url, GoodsManagement.class,"240501100001");
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
 
-    @DisplayName("상품미조회_다른필드예외")
-    @Test
-    @Order(3)
-    public void 상품_미조회_오류() {
-        String url = "http://localhost:8080/v1/goods/{goodsNo}";
-        assertThrows(BadRequestException.class, () -> {
-            testRestTemplate.getForEntity(url, GoodsMgmt.class,"ㅋㅋㅋㅋ");
-        });
-/*
-테스트 실패 왜 나는지 모르겠습니다.
-org.opentest4j.AssertionFailedError: Expected org.apache.coyote.BadRequestException to be thrown, but nothing was thrown.
-
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
-	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
-	at com.cosmetics.goods.GoodsApiApplicationTest.상품_미조회_오류(GoodsApiApplicationTest.java:84)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
- */
-    }
-
     @DisplayName("상품삭제")
     @Test
-    @Order(4)
+    @Order(3)
     public void 상품삭제() throws Exception{
-        String url = "http://localhost:8080/v1/goods/{goodsNo}";
-        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, "240501100002");
+        String url =  "http://localhost:" + port + "/v1/goods/{goodsNo}";
+        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, "240501100001");
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("삭제할 상품번호가 존재하지 않습니다._ llegalArgumentExceptionHandler 테스트")
+    public void illegalGoodsTest() throws Exception {
+        //통합테스트에서도 이런 테스트를 해보는게 맞는걸까? 확인필요
+        String goodsNo = "존재하지않는상품번호";
+        String url =  "http://localhost:" + port + "/v1/goods/{goodsNo}";
+        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagement.class, goodsNo);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(jsonPath("errorCode").value("INVALID_PARAMETER"));
+        assertThat(jsonPath("errorMessage").value("존재하지 않는 상품입니다"));
     }
 }
