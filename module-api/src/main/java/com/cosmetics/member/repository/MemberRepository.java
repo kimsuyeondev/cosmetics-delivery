@@ -1,17 +1,21 @@
 package com.cosmetics.member.repository;
 
 import com.cosmetics.member.MemberMgmt;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
 /*
     API Spec 및 컨트롤러 작성을 위해 임시적으로 싱글톤 작성하였습니다.
 * */
-
+@Repository
 public class MemberRepository {
-    private static Map<String, MemberMgmt> memberMap = new HashMap<>();
+    private static Map<String, MemberMgmt> memberMap = new ConcurrentHashMap<>();
 
-    private static long sequence = 0L;
+    private static AtomicLong sequence = new AtomicLong();
 
     private static final MemberRepository instance = new MemberRepository();
 
@@ -20,7 +24,7 @@ public class MemberRepository {
     }
 
     public MemberMgmt save(MemberMgmt memberMgmt){
-        String memberId = "20240501100000000" + ++sequence;
+        String memberId = "20240501100000000" + sequence.getAndIncrement();
         memberMgmt.setMemberId(memberId);
         memberMap.put(memberId, memberMgmt);
         return memberMgmt;

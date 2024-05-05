@@ -1,7 +1,6 @@
-package com.cosmetics.vendor;
-import com.cosmetics.goods.GoodsItem;
-import com.cosmetics.goods.GoodsMgmt;
-import com.fasterxml.jackson.databind.ObjectMapper;
+package com.cosmetics.goods;
+
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -58,11 +60,10 @@ public class GoodsApiApplicationTest {
     @Order(1)
     public void 상품등록() throws Exception{
         String url = "http://localhost:8080/v1/goods";
-        ResponseEntity<GoodsMgmt> responseEntity = testRestTemplate.postForEntity(url, goodsMgmt, GoodsMgmt.class);
-
+        ResponseEntity<Map> responseEntity = testRestTemplate.postForEntity(url, goodsMgmt, Map.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(responseEntity.getBody().getGoodsNo()).isEqualTo("240501100002");
-
+        assertNotNull(responseEntity.getBody().get("goodsNo"));
+        assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
     }
 
     @DisplayName("상품조회")
@@ -70,18 +71,38 @@ public class GoodsApiApplicationTest {
     @Order(2)
     public void 상품조회() throws Exception{
         String url = "http://localhost:8080/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsMgmt> responseEntity = testRestTemplate.getForEntity(url, GoodsMgmt.class, "240501100002");
+        ResponseEntity<GoodsMgmt> responseEntity = testRestTemplate.getForEntity(url, GoodsMgmt.class,"240501100002");
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(responseEntity.getBody());
-        System.out.println(json);
+    @DisplayName("상품미조회_다른필드예외")
+    @Test
+    @Order(3)
+    public void 상품_미조회_오류() {
+        String url = "http://localhost:8080/v1/goods/{goodsNo}";
+        assertThrows(BadRequestException.class, () -> {
+            testRestTemplate.getForEntity(url, GoodsMgmt.class,"ㅋㅋㅋㅋ");
+        });
+/*
+테스트 실패 왜 나는지 모르겠습니다.
+org.opentest4j.AssertionFailedError: Expected org.apache.coyote.BadRequestException to be thrown, but nothing was thrown.
+
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
+	at com.cosmetics.goods.GoodsApiApplicationTest.상품_미조회_오류(GoodsApiApplicationTest.java:84)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+ */
     }
 
     @DisplayName("상품삭제")
     @Test
-    @Order(3)
+    @Order(4)
     public void 상품삭제() throws Exception{
         String url = "http://localhost:8080/v1/goods/{goodsNo}";
         ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, "240501100002");

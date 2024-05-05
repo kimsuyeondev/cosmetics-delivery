@@ -1,44 +1,48 @@
 package com.cosmetics.goods.controller;
 
 import com.cosmetics.goods.GoodsMgmt;
-import com.cosmetics.goods.repository.GoodsRepository;
+import com.cosmetics.goods.service.GoodsService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping(value = "/v1/goods")
+@RequiredArgsConstructor
+@Slf4j
 public class GoodsController {
-
-    /** API Spec 및 컨트롤러 작성을 위해 임시적으로 싱글톤 작성하였습니다. */
-    GoodsRepository goodsRepository = GoodsRepository.getInstance();
+    private final GoodsService goodsService;
 
     @GetMapping(value = "/{goodsNo}")
-    public ResponseEntity<GoodsMgmt> findGoods(@PathVariable String goodsNo) {
-        GoodsMgmt goodsMgmt = goodsRepository.findGoods(goodsNo);
-        return new ResponseEntity<>(goodsMgmt, HttpStatus.OK);
+    @ResponseStatus(value = HttpStatus.OK)
+    public GoodsMgmt findGoods(@PathVariable String goodsNo) throws Exception {
+        return goodsService.findGoods(goodsNo);
     }
 
     @PostMapping
-    public ResponseEntity<Map<String,String>> registerGoods(@RequestBody GoodsMgmt goodsMgmt) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String,String> registerGoods(@RequestBody GoodsMgmt goodsMgmt) {
         Map<String,String> resultMap = new HashMap<>();
-        resultMap.put("resultCode","0000");
-        goodsRepository.save(goodsMgmt);
+        goodsService.save(goodsMgmt);
+        resultMap.put("resultCode", "0000");
         resultMap.put("goodsNo", goodsMgmt.getGoodsNo());
-
-        System.out.println(goodsMgmt.getGoodsNm());
-        System.out.println(goodsMgmt.getItem().get(0).getItemNm());
-        System.out.println(goodsMgmt.getItem().get(1).getItemNm());
-        return new ResponseEntity<>(resultMap, HttpStatus.CREATED);
+        log.info("resultMap= {}", resultMap);
+        return resultMap;
     }
 
     @DeleteMapping(value = "/{goodsNo}")
-    public ResponseEntity<Map<String,String>> deleteGoods(@PathVariable String goodsNo) {
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String,String> deleteGoods(@PathVariable String goodsNo) {
         Map<String,String> resultMap = new HashMap<>();
-        goodsRepository.deleteGoods(goodsNo, resultMap);
-        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+        goodsService.deleteGoods(goodsNo, resultMap);
+        log.info("resultMap= {}", resultMap);
+        return resultMap;
     }
-
 }

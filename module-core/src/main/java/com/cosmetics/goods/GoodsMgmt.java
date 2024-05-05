@@ -1,12 +1,13 @@
 package com.cosmetics.goods;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class GoodsMgmt {
     private String category;
     private String goodsNm;
@@ -22,4 +23,8 @@ public class GoodsMgmt {
     private List<GoodsItem> item;
     private String image;
     private String addImage;
+
+    public GoodsMgmt(){
+    }
+
 }
