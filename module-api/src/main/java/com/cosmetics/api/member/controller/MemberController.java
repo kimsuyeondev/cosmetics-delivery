@@ -19,7 +19,7 @@ public class MemberController {
     }
 
     @GetMapping(value = "/{memberId}")
-    public MemberManagement findMember(@PathVariable String memberId) {
+    public MemberManagement findMember(@PathVariable Long memberId) {
         return memberService.findMember(memberId);
     }
 

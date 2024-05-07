@@ -8,3 +8,5 @@ https://documenter.getpostman.com/view/5016899/2sA3Bj7Db5
 - module-api 프레젠테이션 영역
 - module-domain 도메인 영역
 - module-core 공통 영역, Util, Common
+
+# Oracle / JPA

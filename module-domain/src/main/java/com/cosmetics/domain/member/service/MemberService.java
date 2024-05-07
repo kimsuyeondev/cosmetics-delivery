@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MemberService {
-    MemberManagement findMember(String memberId);
+    MemberManagement findMember(Long memberId);
+
     MemberManagement save(MemberManagement MemberManagement);
+
+    void deleteMember(Long memberId);
 }

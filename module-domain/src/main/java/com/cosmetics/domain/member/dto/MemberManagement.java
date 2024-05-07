@@ -1,26 +1,36 @@
 package com.cosmetics.domain.member.dto;
 
 import com.cosmetics.domain.response.dto.ResponseDto;
-import jakarta.validation.constraints.Min;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "MB_MEMBER")
 public class MemberManagement extends ResponseDto {
-    private String memberId;
+
+    @Id
+
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ")
+    @SequenceGenerator(name = "MEMBER_SEQ", sequenceName = "MEMBER_SEQ", allocationSize = 1)
+    private Long memberId;
 
     @NotBlank(message = "이름을 입력해주세요.")
+    @Column(nullable = false)
     private String memberNm;
 
     @NotBlank(message = "전화번호를 입력해주세요.")
+    @Column(nullable = false)
     private String cellNo;
 
     private String skinType;
 
-    @Min(12)
     private String age;
 
     private String addr;
@@ -35,7 +45,7 @@ public class MemberManagement extends ResponseDto {
                             String addrDetail,
                             String resultCode,
                             String resultMsg) {
-        super(resultCode,resultMsg);
+        super(resultCode, resultMsg);
         this.memberNm = memberNm;
         this.cellNo = cellNo;
         this.skinType = skinType;
