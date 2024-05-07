@@ -54,7 +54,7 @@ public class GoodsServiceImpl implements GoodsService {
         GoodsManagement resultGoods = goodsRepository.findGoods(goodsNo);
 
         if (resultGoods != null) {
-            throw new CustomException(MemberErrorManagement.MEMBER_SAVE_ERROR);
+            throw new CustomException(GoodsErrorManagement.GOODS_SAVE_ERROR);
         }
 
         return removeGoods;
