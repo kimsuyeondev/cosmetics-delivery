@@ -1,15 +1,16 @@
 plugins {
+    id "com.palantir.docker-compose" version "0.36.0"
 }
 
 apply plugin: 'io.freefair.lombok'
 
 dependencies {
     implementation project(':module-core')
-
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.3.0.23.09'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
 }
 
 //어플리케이션 실행에 필요한 모든 의존성을 포함하지 않고 클래스파일과 리소스 파일만 포함
