@@ -11,14 +11,11 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Getter
-@Setter
 @Table(name = "MB_MEMBER")
 public class MemberManagement extends ResponseDto {
 
     @Id
-
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ")
-    @SequenceGenerator(name = "MEMBER_SEQ", sequenceName = "MEMBER_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
     @NotBlank(message = "이름을 입력해주세요.")
@@ -42,16 +39,12 @@ public class MemberManagement extends ResponseDto {
                             String skinType,
                             String age,
                             String addr,
-                            String addrDetail,
-                            String resultCode,
-                            String resultMsg) {
-        super(resultCode, resultMsg);
+                            String addrDetail) {
         this.memberNm = memberNm;
         this.cellNo = cellNo;
         this.skinType = skinType;
         this.age = age;
         this.addr = addr;
         this.addrDetail = addrDetail;
-
     }
 }
