@@ -1,4 +1,4 @@
-package com.cosmetics.domain.response.dto;
+package com.cosmetics.domain.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
