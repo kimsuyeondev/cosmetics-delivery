@@ -1,73 +1,58 @@
 package com.cosmetics.domain.goods.dto;
 
-import com.cosmetics.domain.response.ResponseDto;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import com.cosmetics.domain.goods.dto.item.GoodsItemManagement;
+import com.cosmetics.domain.goods.entity.GoodsItemManagementEntity;
+import com.cosmetics.domain.goods.entity.GoodsManagementEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class GoodsManagement extends ResponseDto {
-    private String goodsNo;//seq
+public class GoodsManagement {
+    private Long goodsNo;
 
-    @NotBlank
     private String category;
 
-    @NotBlank
     private String goodsNm;
 
-    @Min(0)
     private long salePrice;
 
-    @Min(0)
     private long marketPrice;
 
-    @Min(0)
     private long supplyPrice;
 
-    @NotBlank
-    private String vendorId;
+    private Long vendorId;
 
-    @Min(value = 1, message = "재고는 1개 이상 이어야 합니다.")
     private int stockQty;
 
-    @NotBlank
     private String brandNm;
 
     private String saleStartDtime;
     private String saleEndDtime;
 
-    @Valid
     private List<GoodsItemManagement> item;
     private String image;
     private String addImage;
 
-    private String resultCode;
-    private String resultMsg;
-
     @Builder
-    public GoodsManagement(String goodsNo,
+    public GoodsManagement(Long goodsNo,
                            String category,
                            String goodsNm,
                            long salePrice,
                            long marketPrice,
                            long supplyPrice,
-                           String vendorId,
+                           Long vendorId,
                            int stockQty,
                            String brandNm,
                            String saleStartDtime,
                            String saleEndDtime,
                            List<GoodsItemManagement> item,
                            String image,
-                           String addImage,
-                           String resultCode,
-                           String resultMsg) {
-        super(resultCode, resultMsg);
+                           String addImage) {
         this.goodsNo = goodsNo;
         this.category = category;
         this.goodsNm = goodsNm;
@@ -84,8 +69,57 @@ public class GoodsManagement extends ResponseDto {
         this.addImage = addImage;
     }
 
-    public void createGoodsNo(String goodsNo) {
-        this.goodsNo = goodsNo;
+    public static GoodsManagement toDto(GoodsManagementEntity goodsManagementEntity) {
+        return GoodsManagement.builder()
+                .goodsNo(goodsManagementEntity.getGoodsNo())
+                .goodsNm(goodsManagementEntity.getGoodsNm())
+                .category(goodsManagementEntity.getCategory())
+                .salePrice(goodsManagementEntity.getSalePrice())
+                .marketPrice(goodsManagementEntity.getMarketPrice())
+                .supplyPrice(goodsManagementEntity.getSupplyPrice())
+                .vendorId(goodsManagementEntity.getVendorId())
+                .stockQty(goodsManagementEntity.getStockQty())
+                .brandNm(goodsManagementEntity.getBrandNm())
+                .saleStartDtime(goodsManagementEntity.getSaleStartDtime())
+                .saleEndDtime(goodsManagementEntity.getSaleEndDtime())
+                .item(toGoodsItemManagement(goodsManagementEntity.getItems()))
+                .image(goodsManagementEntity.getImage())
+                .addImage(goodsManagementEntity.getAddImage())
+                .build();
+    }
+
+    public static List<GoodsItemManagement> toGoodsItemManagement(List<GoodsItemManagementEntity> goodsItemManagementEntityList) {
+        return goodsItemManagementEntityList.stream()
+                .map(GoodsItemManagement::new).collect(Collectors.toList());
+    }
+
+    public GoodsManagementEntity toEntity() {
+        List<GoodsItemManagementEntity> goodsItemManagementEntityList = toGoodsItemManagementEntity(item);
+
+        GoodsManagementEntity goodsManagementEntity =  GoodsManagementEntity.builder()
+                .goodsNo(goodsNo)
+                .goodsNm(goodsNm)
+                .category(category)
+                .salePrice(salePrice)
+                .marketPrice(marketPrice)
+                .supplyPrice(supplyPrice)
+                .vendorId(vendorId)
+                .stockQty(stockQty)
+                .brandNm(brandNm)
+                .saleStartDtime(saleStartDtime)
+                .saleEndDtime(saleEndDtime)
+                .image(image)
+                .addImage(addImage)
+                .build();
+
+        goodsManagementEntity.addItems(goodsItemManagementEntityList);
+
+        return goodsManagementEntity;
+    }
+
+    public List<GoodsItemManagementEntity> toGoodsItemManagementEntity(List<GoodsItemManagement> goodsItemManagementList) {
+        return goodsItemManagementList.stream()
+                .map(GoodsItemManagementEntity::new).collect(Collectors.toList());
     }
 
 }

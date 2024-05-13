@@ -1,13 +1,15 @@
-package com.cosmetics.domain.goods.dto;
+package com.cosmetics.domain.goods.dto.item;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class GoodsItemManagement {
-    private String itemNo;
+@NoArgsConstructor
+public class GoodsItemManagementRequest {
+    private Long itemNo;
 
     @NotBlank
     private String itemNm;
@@ -15,11 +17,8 @@ public class GoodsItemManagement {
     @Min(value = 1, message = "재고는 최소 1개 이상이어야합니다")
     private int itemQty;
 
-    public GoodsItemManagement() {
-    }
-
     @Builder
-    public GoodsItemManagement(String itemNm, int itemQty) {
+    public GoodsItemManagementRequest(String itemNm, int itemQty) {
         this.itemNm = itemNm;
         this.itemQty = itemQty;
     }
