@@ -1,7 +1,8 @@
 package com.cosmetics.api.member.controller;
 
-import com.cosmetics.domain.member.dto.MemberManagement;
-import com.cosmetics.domain.member.service.MemberService;
+import com.cosmetics.domain.member.dto.MemberManagementRequest;
+import com.cosmetics.domain.member.dto.MemberManagementResponse;
+import com.cosmetics.domain.member.service.impl.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,13 @@ public class MemberController {
     }
 
     @GetMapping(value = "/{memberId}")
-    public MemberManagement findMember(@PathVariable Long memberId) {
+    public MemberManagementResponse findMember(@PathVariable Long memberId) {
         return memberService.findMember(memberId);
     }
 
     @PostMapping
-    public MemberManagement registerMember(@RequestBody MemberManagement MemberManagement) {
-        return memberService.save(MemberManagement);
+    public MemberManagementResponse registerMember(@RequestBody MemberManagementRequest memberManagementRequest) {
+        return memberService.save(memberManagementRequest.toServiceDto());
     }
 
 }

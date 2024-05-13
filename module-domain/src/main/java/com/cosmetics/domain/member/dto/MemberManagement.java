@@ -1,29 +1,16 @@
 package com.cosmetics.domain.member.dto;
-
-import com.cosmetics.domain.response.dto.ResponseDto;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import com.cosmetics.domain.member.entity.MemberManagementEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
-@NoArgsConstructor
 @Getter
-@Table(name = "MB_MEMBER")
-public class MemberManagement extends ResponseDto {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@NoArgsConstructor
+public class MemberManagement{
     private Long memberId;
 
-    @NotBlank(message = "이름을 입력해주세요.")
-    @Column(nullable = false)
     private String memberNm;
 
-    @NotBlank(message = "전화번호를 입력해주세요.")
-    @Column(nullable = false)
     private String cellNo;
 
     private String skinType;
@@ -34,12 +21,14 @@ public class MemberManagement extends ResponseDto {
     private String addrDetail;
 
     @Builder
-    public MemberManagement(String memberNm,
+    public MemberManagement(Long memberId,
+                            String memberNm,
                             String cellNo,
                             String skinType,
                             String age,
                             String addr,
                             String addrDetail) {
+        this.memberId = memberId;
         this.memberNm = memberNm;
         this.cellNo = cellNo;
         this.skinType = skinType;
@@ -47,4 +36,29 @@ public class MemberManagement extends ResponseDto {
         this.addr = addr;
         this.addrDetail = addrDetail;
     }
+
+    //엔티티로
+    public MemberManagementEntity toEntity(){
+        return MemberManagementEntity.builder()
+                .memberNm(memberNm)
+                .cellNo(cellNo)
+                .skinType(skinType)
+                .age(age)
+                .addr(addr)
+                .addrDetail(addrDetail).build();
+    }
+
+    public static MemberManagement toDto(MemberManagementEntity memberManagementEntity){
+        return MemberManagement.builder()
+                .memberId(memberManagementEntity.getMemberId())
+                .memberNm(memberManagementEntity.getMemberNm())
+                .cellNo(memberManagementEntity.getCellNo())
+                .skinType(memberManagementEntity.getSkinType())
+                .age(memberManagementEntity.getAge())
+                .addr(memberManagementEntity.getAddr())
+                .addrDetail(memberManagementEntity.getAddrDetail())
+                .build();
+    }
+
+
 }

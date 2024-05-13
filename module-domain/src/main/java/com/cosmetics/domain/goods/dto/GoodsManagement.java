@@ -1,6 +1,6 @@
 package com.cosmetics.domain.goods.dto;
 
-import com.cosmetics.domain.response.dto.ResponseDto;
+import com.cosmetics.domain.response.ResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -46,6 +46,9 @@ public class GoodsManagement extends ResponseDto {
     private List<GoodsItemManagement> item;
     private String image;
     private String addImage;
+
+    private String resultCode;
+    private String resultMsg;
 
     @Builder
     public GoodsManagement(String goodsNo,

@@ -1,6 +1,6 @@
 package com.cosmetics.domain.vendor.dto;
 
-import com.cosmetics.domain.response.dto.ResponseDto;
+import com.cosmetics.domain.response.ResponseDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
