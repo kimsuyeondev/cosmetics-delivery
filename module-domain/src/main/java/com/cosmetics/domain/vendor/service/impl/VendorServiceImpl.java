@@ -22,7 +22,7 @@ public class VendorServiceImpl implements VendorService {
         VendorManagement resultGoodsMgmt = vendorRepository.save(vendorManagement);
 
         if (resultGoodsMgmt.getVendorId() != null) {
-            resultGoodsMgmt.updateSuccess("0000", "등록성공");
+         //   resultGoodsMgmt.updateSuccess("0000", "등록성공");
         } else {
             throw new CustomException(VendorErrorManagement.VENDOR_ERROR_MANAGEMENT);
         }

@@ -6,6 +6,7 @@ import com.cosmetics.domain.member.dto.MemberManagement;
 import com.cosmetics.domain.member.dto.MemberManagementResponse;
 import com.cosmetics.domain.member.entity.MemberManagementEntity;
 import com.cosmetics.domain.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,17 +23,18 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public MemberManagementResponse findMember(Long memberId) {
-        MemberManagementEntity saveEntity =  memberRepository.findByMemberId(memberId);
+        MemberManagementEntity saveEntity =  memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        if(saveEntity == null) {
-            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
-        }
+        //entity -> dto
         MemberManagement memberManagement = MemberManagement.toDto(saveEntity);
 
+        //dto -> response
         return MemberManagementResponse.toResponse(memberManagement);
     }
 
+    @Transactional
     public MemberManagementResponse save(MemberManagement memberManagement) {
         //save
         MemberManagementEntity saveEntity =  memberRepository.save(memberManagement.toEntity());
@@ -51,6 +53,7 @@ public class MemberService {
         return response;
     }
 
+    @Transactional
     public void deleteMember(Long memberId) {
         try {
             memberRepository.deleteByMemberId(memberId);
