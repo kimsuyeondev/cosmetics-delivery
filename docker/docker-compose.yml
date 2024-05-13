@@ -15,5 +15,6 @@ services:
       MYSQL_DATABASE: mysqldb
       MYSQL_USER : dev_1234
       MYSQL_PASSWORD : 1234
+      TZ: Asia/Seoul
 volumes:
   mysql:
