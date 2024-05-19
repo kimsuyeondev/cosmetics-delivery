@@ -1,12 +1,17 @@
 package com.cosmetics.goods.controller;
 
-import com.cosmetics.domain.goods.dto.GoodsItemManagement;
+import com.cosmetics.domain.exception.custom.CustomException;
 import com.cosmetics.domain.goods.dto.GoodsManagement;
+import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
+import com.cosmetics.domain.goods.dto.item.GoodsItemManagementRequest;
+import com.cosmetics.domain.goods.entity.GoodsManagementEntity;
 import com.cosmetics.domain.goods.repository.GoodsRepository;
 import com.cosmetics.domain.goods.service.GoodsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +24,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 public class GoodsExceptionTest {
 
     @Autowired
@@ -40,16 +47,13 @@ public class GoodsExceptionTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private GoodsRepository goodsRepository;
-
     @Test
     @DisplayName("상품등록 시 내부오류로 상품등록이 실패했을 경우_커스텀 예외_CustomExceptionHandler 테스트")
     public void saveGoodsFailErrorTest() throws Exception {
-        GoodsManagement goodsManagement = requestGoods();
-
-        doReturn(null).when(goodsRepository).save(any(GoodsManagement.class));
-// Body = {"resultCode":"0000","resultMsg":"등록성공","goodsNo":"240501100001","category":"스킨케어","goodsNm":"닥터스킨","salePrice":12000,"marketPrice":15000,"supplyPrice":10000,"vendorId":"lv202400002","stockQty":80,"brandNm":"닥터펫","saleStartDtime":"2024-05-01 00:00:00","saleEndDtime":"2024-08-01 00:00:00","item":[{"itemNo":null,"itemNm":"건성용","itemQty":50},{"itemNo":null,"itemNm":"지성용","itemQty":30}],"image":"https://cdn.localhost:8081/images/lv202400002/goods/image_1.png","addImage":"https://cdn.localhost:8081/images/lv202400002/goods/image_2.png"}
+        GoodsManagementRequest goodsManagement = requestGoods();
+        //테스트실패
+        //java.lang.NullPointerException: Cannot invoke "com.cosmetics.domain.goods.dto.GoodsManagement.toEntity()" because "goodsManagement" is null
+        when(goodsService.save(any(GoodsManagement.class))).thenThrow(CustomException.class);
 
         mockMvc.perform(
                 post("http://localhost:8080/v1/goods")
@@ -59,31 +63,31 @@ public class GoodsExceptionTest {
                 .andExpect(jsonPath("errorMessage").value("상품 등록에 실패하였습니다  잠시 후에 시도해 주세요"));
     }
 
-    private static GoodsManagement requestGoods() {
+    private static GoodsManagementRequest requestGoods() {
         //item
-        List<GoodsItemManagement> items = new ArrayList<>();
+        List<GoodsItemManagementRequest> items = new ArrayList<>();
 
-        items.add(GoodsItemManagement.builder()
+        items.add(GoodsItemManagementRequest.builder()
                 .itemNm("건성용")
                 .itemQty(50).build());
-        items.add(GoodsItemManagement.builder()
+        items.add(GoodsItemManagementRequest.builder()
                 .itemNm("지성용")
                 .itemQty(30).build());
 
-        return GoodsManagement.builder()
+        return GoodsManagementRequest.builder()
                 .category("스킨케어")
                 .goodsNm("닥터스킨")
                 .marketPrice(15000)
                 .salePrice(12000)
                 .supplyPrice(10000)
-                .vendorId("lv202400002")
+                .vendorId(1L)
                 .stockQty(80)
                 .brandNm("닥터펫")
                 .saleStartDtime("2024-05-01 00:00:00")
                 .saleEndDtime("2024-08-01 00:00:00")
                 .image("https://cdn.localhost:8081/images/lv202400002/goods/image_1.png")
                 .addImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png")
-                .item(items)
+                .items(items)
                 .build();
     }
 }
