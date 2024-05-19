@@ -5,6 +5,7 @@ import com.cosmetics.domain.goods.dto.item.GoodsItemManagementRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,28 +25,34 @@ public class GoodsManagementRequest {
     private String goodsNm;
 
     @Min(0)
+    @NotNull
     private long salePrice;
 
     @Min(0)
+    @NotNull
     private long marketPrice;
 
     @Min(0)
+    @NotNull
     private long supplyPrice;
 
     @Min(value = 1, message = "업체 번호를 입력해주세요.")
+    @NotNull
     private Long vendorId;
 
     @Min(value = 1, message = "재고는 1개 이상 이어야 합니다.")
+    @NotNull
     private int stockQty;
 
     @NotBlank
+    @NotNull
     private String brandNm;
 
     private String saleStartDtime;
     private String saleEndDtime;
 
     @Valid
-    private List<GoodsItemManagementRequest> item;
+    private List<GoodsItemManagementRequest> items;
     private String image;
     private String addImage;
 
@@ -61,7 +68,7 @@ public class GoodsManagementRequest {
                                   String brandNm,
                                   String saleStartDtime,
                                   String saleEndDtime,
-                                  List<GoodsItemManagementRequest> item,
+                                  List<GoodsItemManagementRequest> items,
                                   String image,
                                   String addImage) {
         this.goodsNo = goodsNo;
@@ -75,7 +82,7 @@ public class GoodsManagementRequest {
         this.brandNm = brandNm;
         this.saleStartDtime = saleStartDtime;
         this.saleEndDtime = saleEndDtime;
-        this.item = item;
+        this.items = items;
         this.image = image;
         this.addImage = addImage;
     }
@@ -98,7 +105,7 @@ public class GoodsManagementRequest {
                 .brandNm(brandNm)
                 .saleStartDtime(saleStartDtime)
                 .saleEndDtime(saleEndDtime)
-                .item(toGoodsItemManagementList(item))
+                .items(toGoodsItemManagementList(items))
                 .image(image)
                 .addImage(addImage)
                 .build();

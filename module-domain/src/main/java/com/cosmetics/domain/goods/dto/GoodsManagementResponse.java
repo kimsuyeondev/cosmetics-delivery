@@ -25,7 +25,7 @@ public class GoodsManagementResponse extends ResponseDto {
     private String brandNm;
     private String saleStartDtime;
     private String saleEndDtime;
-    private List<GoodsItemManagementResponse> item;
+    private List<GoodsItemManagementResponse> items;
     private String image;
     private String addImage;
 
@@ -41,7 +41,7 @@ public class GoodsManagementResponse extends ResponseDto {
                                    String brandNm,
                                    String saleStartDtime,
                                    String saleEndDtime,
-                                   List<GoodsItemManagementResponse> item,
+                                   List<GoodsItemManagementResponse> items,
                                    String image,
                                    String addImage,
                                    String resultCode,
@@ -58,7 +58,7 @@ public class GoodsManagementResponse extends ResponseDto {
         this.brandNm = brandNm;
         this.saleStartDtime = saleStartDtime;
         this.saleEndDtime = saleEndDtime;
-        this.item = item;
+        this.items = items;
         this.image = image;
         this.addImage = addImage;
     }
@@ -76,7 +76,7 @@ public class GoodsManagementResponse extends ResponseDto {
                 .brandNm(goodsManagent.getBrandNm())
                 .saleStartDtime(goodsManagent.getSaleStartDtime())
                 .saleEndDtime(goodsManagent.getSaleEndDtime())
-                .item(toGoodsManagementList(goodsManagent.getItem()))
+                .items(toGoodsManagementList(goodsManagent.getItems()))
                 .image(goodsManagent.getImage())
                 .addImage(goodsManagent.getAddImage())
                 .build();

@@ -34,7 +34,7 @@ public class GoodsManagement {
     private String saleStartDtime;
     private String saleEndDtime;
 
-    private List<GoodsItemManagement> item;
+    private List<GoodsItemManagement> items;
     private String image;
     private String addImage;
 
@@ -50,7 +50,7 @@ public class GoodsManagement {
                            String brandNm,
                            String saleStartDtime,
                            String saleEndDtime,
-                           List<GoodsItemManagement> item,
+                           List<GoodsItemManagement> items,
                            String image,
                            String addImage) {
         this.goodsNo = goodsNo;
@@ -64,7 +64,7 @@ public class GoodsManagement {
         this.brandNm = brandNm;
         this.saleStartDtime = saleStartDtime;
         this.saleEndDtime = saleEndDtime;
-        this.item = item;
+        this.items = items;
         this.image = image;
         this.addImage = addImage;
     }
@@ -82,7 +82,7 @@ public class GoodsManagement {
                 .brandNm(goodsManagementEntity.getBrandNm())
                 .saleStartDtime(goodsManagementEntity.getSaleStartDtime())
                 .saleEndDtime(goodsManagementEntity.getSaleEndDtime())
-                .item(toGoodsItemManagement(goodsManagementEntity.getItems()))
+                .items(toGoodsItemManagement(goodsManagementEntity.getItems()))
                 .image(goodsManagementEntity.getImage())
                 .addImage(goodsManagementEntity.getAddImage())
                 .build();
@@ -94,7 +94,7 @@ public class GoodsManagement {
     }
 
     public GoodsManagementEntity toEntity() {
-        List<GoodsItemManagementEntity> goodsItemManagementEntityList = toGoodsItemManagementEntity(item);
+        List<GoodsItemManagementEntity> goodsItemManagementEntityList = toGoodsItemManagementEntity(items);
 
         GoodsManagementEntity goodsManagementEntity =  GoodsManagementEntity.builder()
                 .goodsNo(goodsNo)

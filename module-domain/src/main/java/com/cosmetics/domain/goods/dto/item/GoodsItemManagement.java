@@ -13,7 +13,8 @@ public class GoodsItemManagement {
     private int itemQty;
 
     @Builder
-    public GoodsItemManagement(String itemNm, int itemQty) {
+    public GoodsItemManagement(Long itemNo, String itemNm, int itemQty) {
+        this.itemNo = itemNo;
         this.itemNm = itemNm;
         this.itemQty = itemQty;
     }
