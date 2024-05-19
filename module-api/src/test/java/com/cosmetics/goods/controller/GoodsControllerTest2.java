@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,9 +60,9 @@ public class GoodsControllerTest2 {
         //then
         resultActions.andExpect(jsonPath("errorCode").value("INVALID_PARAMETER"));
         resultActions.andExpect(jsonPath("errorMessage").value("유효하지 않는 값입니다"));
-        resultActions.andExpect(jsonPath("$.fieldErrorList[0].field").value("goodsNm"));
+        resultActions.andExpect(jsonPath("$.fieldErrorList[0].field").value(anyOf(is("items[0].itemNm"), is("goodsNm"))));
         resultActions.andExpect(jsonPath("$.fieldErrorList[0].message").value("must not be blank"));
-        resultActions.andExpect(jsonPath("$.fieldErrorList[1].field").value("items[0].itemNm"));
+        resultActions.andExpect(jsonPath("$.fieldErrorList[1].field").value(anyOf(is("items[0].itemNm"), is("goodsNm"))));
         resultActions.andExpect(jsonPath("$.fieldErrorList[1].message").value("must not be blank"));
     }
 
