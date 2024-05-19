@@ -1,7 +1,9 @@
 package com.cosmetics.goods;
 
-import com.cosmetics.domain.goods.dto.GoodsItemManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagement;
+import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
+import com.cosmetics.domain.goods.dto.GoodsManagementResponse;
+import com.cosmetics.domain.goods.dto.item.GoodsItemManagementRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,31 +32,31 @@ public class GoodsApiApplicationTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    private static GoodsManagement requestGoods() {
+    private static GoodsManagementRequest requestGoods() {
         //item
-        List<GoodsItemManagement> items = new ArrayList<>();
+        List<GoodsItemManagementRequest> items = new ArrayList<>();
 
-        items.add(GoodsItemManagement.builder()
+        items.add(GoodsItemManagementRequest.builder()
                 .itemNm("건성용")
                 .itemQty(50).build());
-        items.add(GoodsItemManagement.builder()
+        items.add(GoodsItemManagementRequest.builder()
                 .itemNm("지성용")
                 .itemQty(30).build());
 
-        return GoodsManagement.builder()
+        return GoodsManagementRequest.builder()
                 .category("스킨케어")
                 .goodsNm("닥터스킨")
                 .marketPrice(15000)
                 .salePrice(12000)
                 .supplyPrice(10000)
-                .vendorId("lv202400002")
+                .vendorId(1L)
                 .stockQty(80)
                 .brandNm("닥터펫")
                 .saleStartDtime("2024-05-01 00:00:00")
                 .saleEndDtime("2024-08-01 00:00:00")
                 .image("https://cdn.localhost:8081/images/lv202400002/goods/image_1.png")
                 .addImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png")
-                .item(items)
+                .items(items)
                 .build();
     }
 
@@ -63,8 +65,10 @@ public class GoodsApiApplicationTest {
     @Order(1)
     public void 상품등록() throws Exception{
         String url = "http://localhost:" + port + "/v1/goods";
-        GoodsManagement goodsManagement = requestGoods();
-        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.postForEntity(url, goodsManagement, GoodsManagement.class);
+        GoodsManagementRequest goodsManagementRequest = requestGoods();
+
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.postForEntity(url, goodsManagementRequest, GoodsManagementResponse.class);
+
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertNotNull(responseEntity.getBody().getGoodsNo());
         assertThat(responseEntity.getBody().getResultCode()).isEqualTo("0000");
@@ -75,7 +79,7 @@ public class GoodsApiApplicationTest {
     @Order(2)
     public void 상품조회() throws Exception{
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.getForEntity(url, GoodsManagement.class,"240501100001");
+        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.getForEntity(url, GoodsManagement.class,1L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
@@ -85,7 +89,7 @@ public class GoodsApiApplicationTest {
     @Order(3)
     public void 상품삭제() throws Exception{
         String url =  "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, "240501100001");
+        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, 1L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
     }
