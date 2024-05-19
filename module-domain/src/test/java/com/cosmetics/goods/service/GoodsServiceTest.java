@@ -54,7 +54,7 @@ public class GoodsServiceTest {
     private GoodsRepository goodsRepository;
 
     @Test
-    @DisplayName("상품 엔티티가 서비스 객체로 변환된다. ")
+    @DisplayName("상품 엔티티가 서비스 객체로 변환된다.")
     public void 엔티티_서비스객체_변환() throws Exception {
         //given
         GoodsManagementEntity goodsEntity = responseGoods().toEntity();
