@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,7 +62,7 @@ public class GoodsApiApplicationTest {
     @DisplayName("상품등록")
     @Test
     @Order(1)
-    public void 상품등록() throws Exception{
+    public void 상품등록() throws Exception {
         String url = "http://localhost:" + port + "/v1/goods";
         GoodsManagementRequest goodsManagementRequest = requestGoods();
 
@@ -77,9 +76,9 @@ public class GoodsApiApplicationTest {
     @DisplayName("상품조회")
     @Test
     @Order(2)
-    public void 상품조회() throws Exception{
+    public void 상품조회() throws Exception {
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.getForEntity(url, GoodsManagement.class,1L);
+        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.getForEntity(url, GoodsManagement.class, 1L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
@@ -87,11 +86,10 @@ public class GoodsApiApplicationTest {
     @DisplayName("상품삭제")
     @Test
     @Order(3)
-    public void 상품삭제() throws Exception{
-        String url =  "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<Map> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, 1L);
+    public void 상품삭제() throws Exception {
+        String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, 1L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().get("resultCode")).isEqualTo("0000");
     }
 
     @Test
@@ -100,8 +98,8 @@ public class GoodsApiApplicationTest {
     public void illegalGoodsTest() throws Exception {
         //통합테스트에서도 이런 테스트를 해보는게 맞는걸까? 확인필요
         String goodsNo = "존재하지않는상품번호";
-        String url =  "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagement.class, goodsNo);
+        String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, goodsNo);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(jsonPath("errorCode").value("INVALID_PARAMETER"));
         assertThat(jsonPath("errorMessage").value("존재하지 않는 상품입니다"));

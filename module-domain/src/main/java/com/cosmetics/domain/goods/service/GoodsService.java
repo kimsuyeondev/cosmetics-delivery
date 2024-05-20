@@ -38,7 +38,6 @@ public class GoodsService {
         //dto -> response
         GoodsManagementResponse resultGoodsManagementResponse = GoodsManagementResponse.toResponseDto(resultGoodsManagement);
         log.error("{}", resultGoodsManagement.getGoodsNo());
-        log.error("{}", resultGoodsManagement.getItems().get(0).getItemNo());
 
         if (resultGoodsManagement.getGoodsNo() != null) {
             resultGoodsManagementResponse.updateSuccess("0000", "등록성공");

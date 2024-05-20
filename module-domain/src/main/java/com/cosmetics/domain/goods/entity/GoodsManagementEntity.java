@@ -51,7 +51,7 @@ public class GoodsManagementEntity {
     @LastModifiedDate
     private LocalDateTime updateDtime;
 
-    @OneToMany(mappedBy = "goodsManagementEntity", cascade = CascadeType.PERSIST) // 보통 외래키가 있는 쪽이 주인, 주인은 mappyedBy를 설정하지 않음
+    @OneToMany(mappedBy = "goodsManagementEntity", cascade = CascadeType.PERSIST, orphanRemoval=true) // 보통 외래키가 있는 쪽이 주인, 주인은 mappyedBy를 설정하지 않음
     private List<GoodsItemManagementEntity> items = new ArrayList<>();
 
     private String image;
