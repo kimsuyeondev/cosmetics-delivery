@@ -41,6 +41,7 @@ public class GoodsApiApplicationTest {
                 .itemNm("지성용")
                 .itemQty(30).build());
 
+
         return GoodsManagementRequest.builder()
                 .category("스킨케어")
                 .goodsNm("닥터스킨")
