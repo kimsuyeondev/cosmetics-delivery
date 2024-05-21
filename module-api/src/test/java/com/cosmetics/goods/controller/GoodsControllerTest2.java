@@ -72,7 +72,6 @@ public class GoodsControllerTest2 {
     public void saveGoodsFailErrorTest() throws Exception {
         GoodsManagementRequest goodsManagement = requestGoods();
 
-        //given(goodsService.save(goodsManagement.toServiceDto())).willThrow(new CustomException(GoodsErrorManagement.GOODS_SAVE_ERROR));
         given(goodsService.save(any())).willThrow(new CustomException(GoodsErrorManagement.GOODS_SAVE_ERROR));
 
         //when
@@ -80,6 +79,8 @@ public class GoodsControllerTest2 {
                 post("http://localhost:8080/v1/goods")
                         .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(goodsManagement)));
         resultActions.andDo(print()).andExpect(jsonPath("errorCode").value("GOODS_SAVE_ERROR"));
+        resultActions.andExpect(jsonPath("errorMessage").value("상품 등록에 실패하였습니다  잠시 후에 시도해 주세요"));
+
     }
 
     @Test
@@ -149,23 +150,6 @@ public class GoodsControllerTest2 {
                 .addImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png")
                 .items(items)
                 .build();
-    }
-
-
-    @Test
-    @DisplayName("상품등록 시 내부오류로 상품등록이 실패했을 경우_커스텀 예외_CustomExceptionHandler 테스트")
-    public void saveGoodsFailErrorTes2t() throws Exception {
-        GoodsManagementRequest goodsManagement = requestGoods();
-        //테스트실패
-        //java.lang.NullPointerException: Cannot invoke "com.cosmetics.domain.goods.dto.GoodsManagement.toEntity()" because "goodsManagement" is null
-        when(goodsService.save(goodsManagement.toServiceDto())).thenThrow(CustomException.class);
-
-        mockMvc.perform(
-                        post("http://localhost:8080/v1/goods")
-                                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(goodsManagement)))
-                .andDo(print())
-                .andExpect(jsonPath("errorCode").value("GOODS_SAVE_ERROR"))
-                .andExpect(jsonPath("errorMessage").value("상품 등록에 실패하였습니다  잠시 후에 시도해 주세요"));
     }
 
 }
