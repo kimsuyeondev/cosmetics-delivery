@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Slf4j
 public class GoodsApiApplicationTest {
- /*   @LocalServerPort
+    @LocalServerPort
     private int port;
 
     @Autowired
@@ -103,5 +103,5 @@ public class GoodsApiApplicationTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(jsonPath("errorCode").value("INVALID_PARAMETER"));
         assertThat(jsonPath("errorMessage").value("존재하지 않는 상품입니다"));
-    }*/
+    }
 }
