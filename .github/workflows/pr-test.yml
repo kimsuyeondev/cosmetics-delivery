@@ -56,8 +56,10 @@ jobs:
        container port: 3306
        character set server: 'utf8'
        mysql database: 'mysqldb'
-       mysql user: ${{ secrets.MYSQL_USER}}
-       mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
+       mysql user: dev_1234
+       mysql password: 1234
+       #mysql user: ${{ secrets.MYSQL_USER}}
+       #mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
    
     - name: Build with Gradle Wrapper
       run: ./gradlew build
