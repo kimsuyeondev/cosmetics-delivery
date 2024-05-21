@@ -86,7 +86,7 @@ public class GoodsApiApplicationTest {
     @DisplayName("상품삭제")
     @Test
     @Order(3)
-    public void 상품삭제() throws Exception {
+    public void 상품삭제(){
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
         ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, 2L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
