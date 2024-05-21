@@ -1,6 +1,7 @@
 package com.cosmetics.goods.controller;
 
 import com.cosmetics.domain.exception.custom.CustomException;
+import com.cosmetics.domain.exception.error.GoodsErrorManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
 import com.cosmetics.domain.goods.dto.item.GoodsItemManagementRequest;
@@ -9,9 +10,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,18 +31,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
-* 확인필요 이렇게도 테스트를 할까요?? 커스텀예외를 테스트하기 위해 상품등록시 서비스비즈니스와 컨트롤러 익셉션핸들러 테스트를 해보고 싶었습니다.
- * 테스트 실패
- * goodsService 안의 goodsRepository를 건들수가 없어서 성공으로 나오며, 테스트 실패하였습니다
- * 커스텀예외의 핸들러를 테스트하고 싶은데 어떻게 해야할까요?
-* */
+익셉션 핸들러 테스트 해보기
+ * */
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Slf4j
 public class GoodsExceptionTest {
 
-    @Autowired
+    @MockBean
     private GoodsService goodsService;
 
     @Autowired
@@ -47,11 +50,10 @@ public class GoodsExceptionTest {
     public void saveGoodsFailErrorTest() throws Exception {
         GoodsManagementRequest goodsManagement = requestGoods();
         //테스트실패
-        //java.lang.NullPointerException: Cannot invoke "com.cosmetics.domain.goods.dto.GoodsManagement.toEntity()" because "goodsManagement" is null
-        when(goodsService.save(any(GoodsManagement.class))).thenThrow(CustomException.class);
+        when(goodsService.save(any(GoodsManagement.class))).thenThrow(new CustomException(GoodsErrorManagement.GOODS_SAVE_ERROR));
 
         mockMvc.perform(
-                post("http://localhost:8080/v1/goods")
+                        post("http://localhost:8080/v1/goods")
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(goodsManagement)))
                 .andDo(print())
                 .andExpect(jsonPath("errorCode").value("GOODS_SAVE_ERROR"))
