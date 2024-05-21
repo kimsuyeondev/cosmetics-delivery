@@ -1,6 +1,5 @@
 package com.cosmetics.goods;
 
-import com.cosmetics.domain.goods.dto.GoodsManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
 import com.cosmetics.domain.goods.dto.GoodsManagementResponse;
 import com.cosmetics.domain.goods.dto.item.GoodsItemManagementRequest;
@@ -78,7 +77,7 @@ public class GoodsApiApplicationTest {
     @Order(2)
     public void 상품조회() throws Exception {
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagement> responseEntity = testRestTemplate.getForEntity(url, GoodsManagement.class, 1L);
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.getForEntity(url, GoodsManagementResponse.class, 2L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
@@ -88,7 +87,7 @@ public class GoodsApiApplicationTest {
     @Order(3)
     public void 상품삭제() throws Exception {
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, 1L);
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, 2L);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
