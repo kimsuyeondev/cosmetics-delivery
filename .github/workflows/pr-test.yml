@@ -57,3 +57,5 @@ jobs:
        mysql user: ${{ secrets.MYSQL_USER}}
        mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
    
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build
