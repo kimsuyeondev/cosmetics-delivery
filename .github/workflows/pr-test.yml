@@ -32,7 +32,8 @@ jobs:
           MYSQL_USER: dev_1234
           MYSQL_PASSWORD: 1234
           TZ: Asia/Seoul
-          PORT: 3306
+          ports: 3306:3306
+          
 #1. 소스 체크 아웃 
 #2. jdk 설정
     steps:
