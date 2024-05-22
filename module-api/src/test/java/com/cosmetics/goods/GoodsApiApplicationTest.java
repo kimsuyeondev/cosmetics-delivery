@@ -96,7 +96,6 @@ public class GoodsApiApplicationTest {
     @Order(4)
     @DisplayName("삭제할 상품번호가 존재하지 않습니다._ llegalArgumentExceptionHandler 테스트")
     public void illegalGoodsTest() throws Exception {
-        //통합테스트에서도 이런 테스트를 해보는게 맞는걸까? 확인필요
         String goodsNo = "존재하지않는상품번호";
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
         ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, goodsNo);
