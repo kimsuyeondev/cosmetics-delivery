@@ -27,7 +27,7 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: 1234
+         # MYSQL_ROOT_PASSWORD: 1234
           MYSQL_DATABASE: mysqldb
           MYSQL_USER: dev_1234
           MYSQL_PASSWORD: 1234
