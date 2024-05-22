@@ -32,12 +32,6 @@ jobs:
           MYSQL_USER: dev_1234
           MYSQL_PASSWORD: 1234
           TZ: Asia/Seoul
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          
-    
 #1. 소스 체크 아웃 
 #2. jdk 설정
     steps:
