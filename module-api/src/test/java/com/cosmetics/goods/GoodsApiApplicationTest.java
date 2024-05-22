@@ -73,7 +73,7 @@ public class GoodsApiApplicationTest {
         assertThat(responseEntity.getBody().getResultCode()).isEqualTo("0000");
     }
 
-    @DisplayName("상품조회")
+    @DisplayName("상품 조회")
     @Test
     @Order(2)
     public void 상품조회() throws Exception {
