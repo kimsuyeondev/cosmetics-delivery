@@ -27,11 +27,10 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: 1234
+       #   MYSQL_ROOT_PASSWORD: '1234'
           MYSQL_DATABASE: mysqldb
-         # MYSQL_USER : dev_1234
-         # MYSQL_PASSWORD : 1234
-          TZ: Asia/Seoul
+          MYSQL_USER : 'dev_1234'
+          MYSQL_PASSWORD : '1234'
           options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         ports: 
           - 3306:3306
