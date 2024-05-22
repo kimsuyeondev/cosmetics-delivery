@@ -75,6 +75,6 @@ jobs:
       if: always()
       with:
         report_paths: 'module-api/build/test-results/test/TEST-*.xml'
-#8. Gradle 빌드 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
+#8. Gradle 클린 빌드 
+    - name: Build with Gradle
+      run: ./gradlew clean build
