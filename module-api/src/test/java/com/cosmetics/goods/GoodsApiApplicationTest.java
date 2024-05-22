@@ -35,7 +35,7 @@ public class GoodsApiApplicationTest {
         List<GoodsItemManagementRequest> items = new ArrayList<>();
 
         items.add(GoodsItemManagementRequest.builder()
-                .itemNm("건성용")
+                .itemNm("건성용 ")
                 .itemQty(50).build());
         items.add(GoodsItemManagementRequest.builder()
                 .itemNm("지성용")
