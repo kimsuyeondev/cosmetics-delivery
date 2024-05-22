@@ -83,7 +83,7 @@ public class GoodsApiApplicationTest {
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
 
-    @DisplayName("상품삭제")
+    @DisplayName("상품 삭제")
     @Test
     @Order(3)
     public void 상품삭제(){
