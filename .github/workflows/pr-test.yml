@@ -22,7 +22,8 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-
+#1. 소스 체크 아웃 
+#2. jdk 설정
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -30,36 +31,32 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-#추가
-    - name: gradlew 실행 권한 설정
+#3. gradlew 실행 권한설정
+    - name: gradlew 실행 권한설정
       run: chmod +x gradlew
- 
+#4. MySQL 설정 
+    - name: Setup MySQL
+      uses: samin/mysql-action@v1
+      with:
+       character set server: 'utf8'
+       mysql database: 'mysqldb'
+       mysql user: ${{ secrets.MYSQL_USER}}
+       mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
+#5. 테스트 실행  
     - name: 테스트 실행 
       run: ./gradlew --info test
-
+#6. 테스트 결과 
     - name: 테스트 결과
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()  
       with:
          files: 'module-api/build/test-results/**/*.xml'
-    
+#6. 테스트 실패시 주석 추가    
     - name: 테스트 실패 Comment
       uses: mikepenz/action-junit-report@v3
       if: always()
       with:
         report_paths: 'module-api/build/test-results/test/TEST-*.xml'
-    
-    - name: Setup MySQL
-      uses: samin/mysql-action@v1
-      with:
-       host port: 3306
-       container port: 3306
-       character set server: 'utf8'
-       mysql database: 'mysqldb'
-       mysql user: dev_1234
-       mysql password: 1234
-       #mysql user: ${{ secrets.MYSQL_USER}}
-       #mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
-   
+#8. Gradle 빌드 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
