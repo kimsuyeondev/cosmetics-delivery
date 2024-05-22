@@ -61,7 +61,7 @@ jobs:
     - name: Wait for MySQL to be ready
       run: |
         for i in `seq 1 30`; do
-          if mysql -h localhost -u dev_1234 -p1234 -e 'SELECT 1' &> /dev/null; then
+          if mysql -h 127.0.0.1 -u dev_1234 -p1234 -e 'SELECT 1' &> /dev/null; then
             break
           fi
           echo 'Waiting for MySQL...'
