@@ -32,7 +32,6 @@ jobs:
           MYSQL_USER: dev_1234
           MYSQL_PASSWORD: 1234
           TZ: Asia/Seoul
-        restart: always  
         ports: 
           - 3306:3306
           
