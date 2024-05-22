@@ -22,6 +22,22 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: 1234
+          MYSQL_DATABASE: mysqldb
+          MYSQL_USER: dev_1234
+          MYSQL_PASSWORD: 1234
+          TZ: Asia/Seoul
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          
+    
 #1. 소스 체크 아웃 
 #2. jdk 설정
     steps:
@@ -35,13 +51,22 @@ jobs:
     - name: gradlew 실행 권한설정
       run: chmod +x gradlew
 #4. MySQL 설정 
-    - name: Setup MySQL
-      uses: samin/mysql-action@v1
-      with:
-       character set server: 'utf8'
-       mysql database: 'mysqldb'
-       mysql user: ${{ secrets.MYSQL_USER}}
-       mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
+#    - name: Setup MySQL
+#      uses: samin/mysql-action@v1
+#      with:
+#       character set server: 'utf8'
+#       mysql database: 'mysqldb'
+#       mysql user: ${{ secrets.MYSQL_USER}}
+#       mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
+    - name: Wait for MySQL to be ready
+      run: |
+        for i in `seq 1 30`; do
+          if mysql -h mysql -u dev_1234 -p1234 -e 'SELECT 1' &> /dev/null; then
+            break
+          fi
+          echo 'Waiting for MySQL...'
+          sleep 1
+        done
 #5. 테스트 실행  
     - name: 테스트 실행 
       run: ./gradlew --info test
