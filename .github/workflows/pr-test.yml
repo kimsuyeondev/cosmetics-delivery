@@ -69,7 +69,7 @@ jobs:
           sleep 1
         done
 #5. 테스트 실행  
-    - name: 테스트 실행 
+    - name: 테스트를 실행 
       run: ./gradlew --info test
 #6. 테스트 결과 
     - name: 테스트 결과
