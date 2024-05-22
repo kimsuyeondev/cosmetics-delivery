@@ -50,7 +50,15 @@ jobs:
 #3. gradlew 실행 권한설정
     - name: gradlew 실행 권한설정
       run: chmod +x gradlew
-      
+#4. MySQL 설정 
+#    - name: Setup MySQL
+#      uses: samin/mysql-action@v1
+#      with:
+#       character set server: 'utf8'
+#       mysql database: 'mysqldb'
+#       mysql user: ${{ secrets.MYSQL_USER}}
+#       mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret 탭에서 설정하세요! 
+  
     - name: Wait for MySQL to be ready
       run: |
         for i in `seq 1 30`; do
