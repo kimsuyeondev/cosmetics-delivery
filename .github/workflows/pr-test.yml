@@ -30,7 +30,6 @@ jobs:
         ports: 
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: 1234
           MYSQL_DATABASE: mysqldb
           MYSQL_USER: dev_1234
           MYSQL_PASSWORD: 1234
