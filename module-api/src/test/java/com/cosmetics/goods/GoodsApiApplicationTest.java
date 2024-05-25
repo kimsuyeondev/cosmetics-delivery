@@ -29,9 +29,8 @@ public class GoodsApiApplicationTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
+    private Long goodsNo;
     private static GoodsManagementRequest requestGoods() {
-        //item 왜반영이안ddddd되냐
         List<GoodsItemManagementRequest> items = new ArrayList<>();
 
         items.add(GoodsItemManagementRequest.builder()
@@ -69,6 +68,8 @@ public class GoodsApiApplicationTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertNotNull(responseEntity.getBody().getGoodsNo());
+        goodsNo = responseEntity.getBody().getGoodsNo();
+        log.error("등록된 상품번호 = {}", goodsNo);
         assertThat(responseEntity.getBody().getResultCode()).isEqualTo("0000");
     }
 
@@ -81,18 +82,20 @@ public class GoodsApiApplicationTest {
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
 
-   /* @DisplayName("상품 삭제")
+    @DisplayName("상품 삭제")
     @Test
-    public void 상품_삭제(){
+    public void 상품_삭제() throws Exception {
+        상품등록();
+        log.error("삭제될 상품번호 = {}", goodsNo);
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, 26L);
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, goodsNo);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }*/
+    }
 
     @Test
     @DisplayName("삭제할 상품번호가 존재하지 않습니다._ llegalArgumentExceptionHandler 테스트")
     public void illegalGoodsTest() throws Exception {
-        String goodsNo = "존재하지않는상품번호";
+        Long goodsNo = 12554L;
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
         ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, GoodsManagementResponse.class, goodsNo);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

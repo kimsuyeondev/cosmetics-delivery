@@ -1,5 +1,6 @@
 package com.cosmetics.api.goods.controller;
 
+import com.cosmetics.domain.goods.dto.GoodsManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
 import com.cosmetics.domain.goods.dto.GoodsManagementResponse;
 import com.cosmetics.domain.goods.service.GoodsService;
@@ -19,17 +20,32 @@ public class GoodsController {
 
     @GetMapping(value = "/{goodsNo}")
     public GoodsManagementResponse findGoods(@PathVariable Long goodsNo) {
-        return goodsService.findByGoodsNo(goodsNo);
+        GoodsManagement goodsManagement = goodsService.findByGoodsNo(goodsNo);
+        //dto -> responseDto
+        GoodsManagementResponse responseGoodsManagement = GoodsManagementResponse.toResponseDto(goodsManagement);
+        responseGoodsManagement.updateSuccess("0000", "조회성공");
+        return responseGoodsManagement;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GoodsManagementResponse registerGoods(@RequestBody @Valid GoodsManagementRequest goodsManagementRequest) {
-        return goodsService.save(goodsManagementRequest.toServiceDto());
+        GoodsManagement goodsManagement = goodsService.save(goodsManagementRequest.toServiceDto());
+        //dto -> responseDto
+        GoodsManagementResponse responseGoodsManagement = GoodsManagementResponse.toResponseDto(goodsManagement);
+        responseGoodsManagement.updateSuccess("0000", "등록성공");
+        return responseGoodsManagement;
     }
 
     @DeleteMapping(value = "/{goodsNo}")
     public GoodsManagementResponse deleteGoods(@PathVariable Long goodsNo) {
-        return goodsService.deleteByGoodsNo(goodsNo);
+        log.error("deleteGoods : {}", goodsNo);
+        GoodsManagement goodsManagement = goodsService.deleteByGoodsNo(goodsNo);
+        //dto -> responseDto
+        GoodsManagementResponse responseGoodsManagement = GoodsManagementResponse.toResponseDto(goodsManagement);
+        responseGoodsManagement.updateSuccess("0000", "삭제성공");
+        return responseGoodsManagement;
     }
+
+    //확인필요 같은 패턴이 반복될때 컨트롤러에 함수로 빼는게 나을까요
 }

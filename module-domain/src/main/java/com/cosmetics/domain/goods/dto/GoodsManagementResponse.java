@@ -3,6 +3,7 @@ package com.cosmetics.domain.goods.dto;
 import com.cosmetics.domain.goods.dto.item.GoodsItemManagement;
 import com.cosmetics.domain.goods.dto.item.GoodsItemManagementResponse;
 import com.cosmetics.domain.response.ResponseDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GoodsManagementResponse extends ResponseDto {
 
     private Long goodsNo;
