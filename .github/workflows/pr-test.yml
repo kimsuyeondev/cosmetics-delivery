@@ -70,7 +70,7 @@ jobs:
     #초기화
     - name: Initialize MySQL database
       run: |
-        mysql -h 127.0.0.1 -u dev_1234 -p1234 < ./db/mysql/init/init.sql
+        mysql -h 127.0.0.1 -u dev_1234 -p1234 < /docker/db/mysql/init/init.sql
     
 #5. 테스트 실행  
     - name: 테스트를 실행 
