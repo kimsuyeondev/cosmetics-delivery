@@ -35,8 +35,9 @@ jobs:
           MYSQL_PASSWORD: 1234
           MYSQL_ROOT_PASSWORD: 1234    
         volumes:
-          - ./db/mysql/init:/docker-entrypoint-initdb.d/init.sql
-
+          - ./db/mysql/data:/var/lib/mysql
+          - ./db/mysql/config:/etc/mysql/conf.d
+          - ./db/mysql/init:/docker-entrypoint-initdb.d
           
 #1. 소스 체크 아웃 
 #2. jdk 설정
