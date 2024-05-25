@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS pv_item(
                                       insert_dtime DATETIME default now(),
                                       update_dtime DATETIME DEFAULT now(),
                                       CONSTRAINT PV_ITEM_PK PRIMARY KEY(item_no),
-                                      foreign key (goods_no) references PV_GOODS(goods_no)
+                                      foreign key (goods_no) references pv_goods(goods_no)
 );
 
 commit;
