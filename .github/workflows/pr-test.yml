@@ -81,12 +81,12 @@ jobs:
       if: always()  
       with:
          files: 'module-api/build/test-results/**/*.xml'
-#6. 테스트 실패시 주석 추가    
-    - name: 테스트 실패 Comment
-      uses: mikepenz/action-junit-report@v3
-      if: always()
-      with:
-        report_paths: 'module-api/build/test-results/test/TEST-*.xml'
+#6. 테스트 실패시 주석 추가
+#    - name: 테스트 실패 Comment
+#      uses: mikepenz/action-junit-report@v3
+#      if: always()
+#      with:
+#        report_paths: 'module-api/build/test-results/test/TEST-*.xml'
 #8. Gradle 클린 빌드 
     - name: Build with Gradle
       run: ./gradlew clean build

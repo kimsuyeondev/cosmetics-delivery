@@ -10,7 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -88,7 +90,8 @@ public class GoodsManagementRequest {
     }
 
     public List<GoodsItemManagement> toGoodsItemManagementList(List<GoodsItemManagementRequest> item){
-        return item.stream()
+        return Optional.ofNullable(item).orElse(new ArrayList<>())
+                .stream()
                 .map(GoodsItemManagement::new).collect(Collectors.toList());
     }
 

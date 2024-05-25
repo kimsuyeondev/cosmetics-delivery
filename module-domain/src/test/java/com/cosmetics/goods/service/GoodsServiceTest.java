@@ -1,9 +1,11 @@
 package com.cosmetics.goods.service;
 
-import com.cosmetics.domain.goods.dto.GoodsItemManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagement;
+import com.cosmetics.domain.goods.dto.GoodsManagementResponse;
+import com.cosmetics.domain.goods.dto.item.GoodsItemManagement;
+import com.cosmetics.domain.goods.entity.GoodsManagementEntity;
 import com.cosmetics.domain.goods.repository.GoodsRepository;
-import com.cosmetics.domain.goods.service.impl.GoodsServiceImpl;
+import com.cosmetics.domain.goods.service.GoodsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,10 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 /**
  * 단위 테스트
@@ -29,46 +33,94 @@ import static org.mockito.Mockito.doReturn;
  * 컨트롤러테스트는 보통 통합 테스트를 하는경우가 많다.
  * 서비스 비즈니스 테스트가 대부분
  */
+
+/**
+ * 상품 서비스 테스트 시나리오
+ * [상품등록]
+ * 등록된 상품엔티티가 서비스 객체로 정상 변환된다.
+ * 서비스 객체가 컨트롤러에 반환될 응답객체로 정상 변환된다.
+ * 상품등록이 정상적으로 응답값으로 0000, "등록성공" 이 업데이트 된다.
+
+ * [상품조회]
+ * 조회한 상품이 존재하지 않는경우 익셉션을 발생시킨다.
+ * 상품조회가 정상적으로 조회된다.
+ */
 @ExtendWith(MockitoExtension.class)
 public class GoodsServiceTest {
     @InjectMocks
-    private GoodsServiceImpl goodsService;
+    private GoodsService goodsService;
 
     @Mock
     private GoodsRepository goodsRepository;
 
     @Test
-    @DisplayName("상품등록")
-    public void 상품등록() throws Exception {
-
+    @DisplayName("상품 엔티티가 서비스 객체로 변환된다. ")
+    public void 엔티티_서비스객체_변환() throws Exception {
         //given
-        GoodsManagement requestGoods = requestGoods();
-        GoodsManagement responseGoods = responseGoods();
+        GoodsManagementEntity goodsEntity = responseGoods().toEntity();
 
-        //어떤 상품이어도 responseGoods가 반환되어야한다. 근데 any에 왜 requestGoods를 넣으면 오류가 나는지 이해가 안간다.ㅠ
-        doReturn(responseGoods).when(goodsRepository).save(any(GoodsManagement.class));
+        //when entity -> dto
+        GoodsManagement goodsManagement = GoodsManagement.toDto(goodsEntity);
 
-        //when
-        GoodsManagement resultGoods = goodsService.save(requestGoods);
-
-        assertThat(resultGoods.getGoodsNo()).isEqualTo("2024050100001");
+        //then
+        assertThat(goodsManagement).usingRecursiveComparison().ignoringFields("items", "insertDtime", "updateDtime").isEqualTo(goodsEntity);
     }
 
     @Test
-    @DisplayName("상품조회")
-    public void 상품조회() throws Exception {
-
+    @DisplayName("서비스 객체가 컨트롤러에 반환될 응답객체로 정상 변환된다.")
+    public void 서비스객체_응답객체_변환() throws Exception {
         //given
-        GoodsManagement responseGoods = responseGoods();
+        GoodsManagementEntity goodsEntity = responseGoods().toEntity();
+        GoodsManagement goodsManagement = GoodsManagement.toDto(goodsEntity);
 
-        doReturn(responseGoods).when(goodsRepository).findGoods(any(String.class));
+        //when dto -> response
+        GoodsManagementResponse goodsManagementResponse = GoodsManagementResponse.toResponseDto(goodsManagement);
+
+        //then
+        assertThat(goodsManagementResponse).usingRecursiveComparison().ignoringFields("resultCode", "resultMsg").isEqualTo(goodsManagement);
+    }
+
+    @Test
+    @DisplayName("상품등록에 성공한다.")
+    public void 상품등록() throws Exception {
+        //given
+        GoodsManagement requestGoods = requestGoods();
+        GoodsManagement responseGoods = responseGoods();
+        GoodsManagementEntity responseEntity = responseGoods.toEntity();
 
         //when
-        GoodsManagement resultGoods = goodsRepository.findGoods("2024050100001");
+        when(goodsRepository.save(any(GoodsManagementEntity.class))).thenReturn(responseEntity);
 
-        assertThat(resultGoods.getGoodsNo()).isEqualTo("2024050100001");
-        assertThat(resultGoods.getGoodsNm()).isEqualTo("닥터스킨");
-        assertThat(resultGoods.getItem().get(1).getItemNm()).isEqualTo("지성용");
+        //then
+        GoodsManagementResponse resultGoods = goodsService.save(requestGoods);
+
+        assertThat(resultGoods.getGoodsNo()).isEqualTo(1L);
+        assertThat(resultGoods.getResultCode()).isEqualTo("0000");
+        assertThat(resultGoods.getResultMsg()).isEqualTo("등록성공");
+    }
+
+    @Test
+    @DisplayName("조회한 상품이 존재하지 않는경우 익셉션을 발생시킨다.")
+    public void 상품_미존재() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> {
+            goodsService.findByGoodsNo(222L);
+        });
+    }
+
+    @Test
+    @DisplayName("상품조회에 성공한다.")
+    public void 상품조회() throws Exception {
+        //given
+        GoodsManagement responseGoods = responseGoods();
+        GoodsManagementEntity responseEntity = responseGoods.toEntity();
+
+        when(goodsRepository.findByGoodsNo(any(Long.class))).thenReturn(Optional.of(responseEntity));
+
+        //when
+        GoodsManagementResponse resultGoods = goodsService.findByGoodsNo(1L);
+
+        assertThat(resultGoods.getGoodsNo()).isEqualTo(1L);
+        assertThat(resultGoods.getItems().get(0).getItemNo()).isEqualTo(1L);
     }
 
     private static GoodsManagement requestGoods() {
@@ -88,14 +140,14 @@ public class GoodsServiceTest {
                 .marketPrice(15000)
                 .salePrice(12000)
                 .supplyPrice(10000)
-                .vendorId("lv202400002")
+                .vendorId(1L)
                 .stockQty(80)
                 .brandNm("닥터펫")
                 .saleStartDtime("2024-05-01 00:00:00")
                 .saleEndDtime("2024-08-01 00:00:00")
                 .image("https://cdn.localhost:8081/images/lv202400002/goods/image_1.png")
                 .addImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png")
-                .item(items)
+                .items(items)
                 .build();
     }
 
@@ -104,27 +156,29 @@ public class GoodsServiceTest {
         List<GoodsItemManagement> items = new ArrayList<>();
 
         items.add(GoodsItemManagement.builder()
+                .itemNo(1L)
                 .itemNm("건성용")
                 .itemQty(50).build());
         items.add(GoodsItemManagement.builder()
+                .itemNo(2L)
                 .itemNm("지성용")
                 .itemQty(30).build());
 
         return GoodsManagement.builder()
-//                .goodsNo("2024050100001")
+                .goodsNo(1L)
                 .category("스킨케어")
                 .goodsNm("닥터스킨")
                 .marketPrice(15000)
                 .salePrice(12000)
                 .supplyPrice(10000)
-                .vendorId("lv202400002")
+                .vendorId(1l)
                 .stockQty(80)
                 .brandNm("닥터펫")
                 .saleStartDtime("2024-05-01 00:00:00")
                 .saleEndDtime("2024-08-01 00:00:00")
                 .image("https://cdn.localhost:8081/images/lv202400002/goods/image_1.png")
                 .addImage("https://cdn.localhost:8081/images/lv202400002/goods/image_2.png")
-                .item(items)
+                .items(items)
                 .build();
     }
 
