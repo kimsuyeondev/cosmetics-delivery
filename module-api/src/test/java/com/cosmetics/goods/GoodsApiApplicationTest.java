@@ -31,7 +31,7 @@ public class GoodsApiApplicationTest {
     private TestRestTemplate testRestTemplate;
 
     private static GoodsManagementRequest requestGoods() {
-        //item ddaaas
+        //item dddddaaas
         List<GoodsItemManagementRequest> items = new ArrayList<>();
 
         items.add(GoodsItemManagementRequest.builder()
