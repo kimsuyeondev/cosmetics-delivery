@@ -76,8 +76,10 @@ public class GoodsApiApplicationTest {
     @DisplayName("상품 조회")
     @Test
     public void 상품조회() throws Exception {
+        상품등록();
+        log.error("조회될 상품번호 = {}", goodsNo);
         String url = "http://localhost:" + port + "/v1/goods/{goodsNo}";
-        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.getForEntity(url, GoodsManagementResponse.class, 1L);
+        ResponseEntity<GoodsManagementResponse> responseEntity = testRestTemplate.getForEntity(url, GoodsManagementResponse.class, goodsNo);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getGoodsNm()).isEqualTo("닥터스킨");
     }
