@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS mb_member(
                                         CONSTRAINT MB_MEMBER_PK PRIMARY KEY(member_id)
 );
 
-select * from MB_MEMBER;
+select * from mb_member;
 
 CREATE TABLE IF NOT EXISTS pv_goods(
                                        goods_no INT NOT NULL AUTO_INCREMENT,
