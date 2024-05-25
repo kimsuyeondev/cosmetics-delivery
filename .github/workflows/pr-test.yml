@@ -34,12 +34,6 @@ jobs:
           MYSQL_USER: dev_1234
           MYSQL_PASSWORD: 1234
           MYSQL_ROOT_PASSWORD: 1234
-
-
-
-
-  
-
         
 #1. 소스 체크 아웃 
 #2. jdk 설정
@@ -51,16 +45,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
-    - name: verify MySQL connection from host
-        # 아래는 실행문, cli에 입력하듯이 명령어를 작성하면 된다.
-    run: |
-          mysql --version
-          sudo apt-get install -y mysql-client
-          sudo service mysql start
-          mysql -uroot -proot -e "CREATE DATABASE mysqldb"
-          mysql -uroot -proot -e "SHOW DATABASES"
-
           
 #3. gradlew 실행 권한설정
     - name: gradlew 실행 권한설정
