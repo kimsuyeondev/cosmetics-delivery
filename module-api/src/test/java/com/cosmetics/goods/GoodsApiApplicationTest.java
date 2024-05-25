@@ -31,7 +31,7 @@ public class GoodsApiApplicationTest {
     private TestRestTemplate testRestTemplate;
 
     private static GoodsManagementRequest requestGoods() {
-        //item testㅇㅇㅇ dd
+        //item 왜반영이안되냐
         List<GoodsItemManagementRequest> items = new ArrayList<>();
 
         items.add(GoodsItemManagementRequest.builder()
