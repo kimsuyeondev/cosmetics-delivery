@@ -92,11 +92,9 @@ public class GoodsServiceTest {
         when(goodsRepository.save(any(GoodsManagementEntity.class))).thenReturn(responseEntity);
 
         //then
-        GoodsManagementResponse resultGoods = goodsService.save(requestGoods);
+        GoodsManagement resultGoods = goodsService.save(requestGoods);
 
         assertThat(resultGoods.getGoodsNo()).isEqualTo(1L);
-        assertThat(resultGoods.getResultCode()).isEqualTo("0000");
-        assertThat(resultGoods.getResultMsg()).isEqualTo("등록성공");
     }
 
     @Test
@@ -117,7 +115,7 @@ public class GoodsServiceTest {
         when(goodsRepository.findByGoodsNo(any(Long.class))).thenReturn(Optional.of(responseEntity));
 
         //when
-        GoodsManagementResponse resultGoods = goodsService.findByGoodsNo(1L);
+        GoodsManagement resultGoods = goodsService.findByGoodsNo(1L);
 
         assertThat(resultGoods.getGoodsNo()).isEqualTo(1L);
         assertThat(resultGoods.getItems().get(0).getItemNo()).isEqualTo(1L);

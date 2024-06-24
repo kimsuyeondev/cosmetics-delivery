@@ -56,7 +56,7 @@ public class CosmeticsExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
         ErrorManagement errorManagement = CommonErrorManagement.INVALID_PARAMETER;
-
+        log.error("Handling IllegalArgumentException: {}", e.getMessage());
         return ErrorResponse.builder()
                 .errorCode(errorManagement.getName())
                 .errorMessage(Optional.ofNullable(e.getMessage()).orElse(errorManagement.getMessage())).build();
@@ -89,4 +89,18 @@ public class CosmeticsExceptionHandler {
         return ErrorResponse.builder()
                 .errorCode(errorManagement.getName()).errorMessage(errorManagement.getMessage()).build();
     }
+
+    /**
+     * RuntimeException exception handler
+     * */
+    @ExceptionHandler(RuntimeException.class)
+    public ErrorResponse handleRuntimeException(RuntimeException e) {
+        ErrorManagement errorManagement = CommonErrorManagement.INVALID_PARAMETER;
+
+        log.error("Handling RuntimeException: {}", e.getMessage());
+        return ErrorResponse.builder()
+                .errorCode(errorManagement.getName())
+                .errorMessage(Optional.ofNullable(e.getMessage()).orElse(errorManagement.getMessage())).build();
+    }
+
 }
