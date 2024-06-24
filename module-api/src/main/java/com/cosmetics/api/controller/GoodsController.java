@@ -4,7 +4,6 @@ import com.cosmetics.domain.goods.dto.GoodsManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
 import com.cosmetics.domain.goods.dto.GoodsManagementResponse;
 import com.cosmetics.domain.goods.service.GoodsService;
-import com.cosmetics.domain.sample.service.AsyncService;
 import com.cosmetics.domain.sms.service.SmsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
