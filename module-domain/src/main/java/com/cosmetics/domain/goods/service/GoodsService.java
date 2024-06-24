@@ -27,6 +27,7 @@ public class GoodsService {
 
     @Transactional
     public GoodsManagement save(GoodsManagement goodsManagement) {
+        //Service단은 따로 작업을 안했는데 이게 맞을까요?
         GoodsManagementEntity resultGoodsManagementEntity = goodsRepository.save(goodsManagement.toEntity());
 
         //entity -> dto
