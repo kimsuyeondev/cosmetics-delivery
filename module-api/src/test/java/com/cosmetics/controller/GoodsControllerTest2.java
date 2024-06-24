@@ -6,6 +6,7 @@ import com.cosmetics.domain.exception.error.GoodsErrorManagement;
 import com.cosmetics.domain.goods.dto.GoodsManagementRequest;
 import com.cosmetics.domain.goods.dto.item.GoodsItemManagementRequest;
 import com.cosmetics.domain.goods.service.GoodsService;
+import com.cosmetics.domain.sms.service.SmsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +41,8 @@ public class GoodsControllerTest2 {
 
     @MockBean
     private GoodsService goodsService;
+    @MockBean
+    private SmsService smsService;
 
     @Autowired
     private MockMvc mockMvc;
