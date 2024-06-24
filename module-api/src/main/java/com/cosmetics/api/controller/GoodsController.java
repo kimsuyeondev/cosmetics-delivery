@@ -22,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 public class GoodsController {
 
     private final GoodsService goodsService;
-    private final AsyncService asyncService;
     private final SmsService smsService;
 
     @GetMapping(value = "/{goodsNo}")
@@ -65,7 +64,6 @@ public class GoodsController {
 
         //등록에 성공하면 메세지를 보낸다고 가정
         if ("0000".equals(goodsResponseFuture.get().getResultCode())) {
-
             smsService.smsMessage(goodsResponseFuture.get().getGoodsNo()); //Cosmetics-Thread-Pool1
         }
         return goodsResponseFuture;
