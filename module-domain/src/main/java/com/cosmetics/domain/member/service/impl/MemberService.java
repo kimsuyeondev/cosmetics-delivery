@@ -1,9 +1,6 @@
 package com.cosmetics.domain.member.service.impl;
 
-import com.cosmetics.domain.exception.custom.CustomException;
-import com.cosmetics.domain.exception.error.MemberErrorManagement;
 import com.cosmetics.domain.member.dto.MemberManagement;
-import com.cosmetics.domain.member.dto.MemberManagementResponse;
 import com.cosmetics.domain.member.entity.MemberManagementEntity;
 import com.cosmetics.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -24,33 +21,25 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberManagementResponse findMember(Long memberId) {
-        MemberManagementEntity saveEntity =  memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+    public MemberManagement findMember(Long memberId) {
+        MemberManagementEntity saveEntity = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         //entity -> dto
         MemberManagement memberManagement = MemberManagement.toDto(saveEntity);
 
         //dto -> response
-        return MemberManagementResponse.toResponse(memberManagement);
+        return memberManagement;
     }
 
     @Transactional
-    public MemberManagementResponse save(MemberManagement memberManagement) {
+    public MemberManagement save(MemberManagement memberManagement) {
         //save
-        MemberManagementEntity saveEntity =  memberRepository.save(memberManagement.toEntity());
+        MemberManagementEntity saveEntity = memberRepository.save(memberManagement.toEntity());
 
         //entity -> dto
         MemberManagement resultMember = MemberManagement.toDto(saveEntity);
 
-        //serviceDto -> responseDto
-        MemberManagementResponse response = MemberManagementResponse.toResponse(resultMember);
-
-        if (resultMember.getMemberId() != null) {
-            response.updateResponse("0000", "등록성공");
-        } else {
-            throw new CustomException(MemberErrorManagement.MEMBER_SAVE_ERROR);
-        }
-        return response;
+        return resultMember;
     }
 
     @Transactional

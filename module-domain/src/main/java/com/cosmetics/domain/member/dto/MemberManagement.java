@@ -1,4 +1,5 @@
 package com.cosmetics.domain.member.dto;
+
 import com.cosmetics.domain.member.entity.MemberManagementEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -6,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MemberManagement{
+public class MemberManagement {
     private Long memberId;
 
     private String memberNm;
@@ -38,7 +39,7 @@ public class MemberManagement{
     }
 
     //엔티티로
-    public MemberManagementEntity toEntity(){
+    public MemberManagementEntity toEntity() {
         return MemberManagementEntity.builder()
                 .memberNm(memberNm)
                 .cellNo(cellNo)
@@ -48,7 +49,7 @@ public class MemberManagement{
                 .addrDetail(addrDetail).build();
     }
 
-    public static MemberManagement toDto(MemberManagementEntity memberManagementEntity){
+    public static MemberManagement toDto(MemberManagementEntity memberManagementEntity) {
         return MemberManagement.builder()
                 .memberId(memberManagementEntity.getMemberId())
                 .memberNm(memberManagementEntity.getMemberNm())

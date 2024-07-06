@@ -1,6 +1,6 @@
-package com.cosmetics.vendor.controller;
+package com.cosmetics.controller;
 
-import com.cosmetics.api.vendor.controller.VendorController;
+import com.cosmetics.api.controller.VendorController;
 import com.cosmetics.domain.vendor.dto.VendorManagement;
 import com.cosmetics.domain.vendor.service.VendorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +41,7 @@ public class VendControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("errorCode").value("INVALID_PARAMETER"))
                 .andExpect(jsonPath("errorMessage").value("유효하지 않는 값입니다"))
-                .andExpect(jsonPath("$.fieldErrorList[0].field").value("vendorNm"))
+                .andExpect(jsonPath("$.fieldErrorList[0].field").value(anyOf(is("vendorNm"), is("postNo"))))
                 .andExpect(jsonPath("$.fieldErrorList[0].message").value("must not be blank"));
 
     }

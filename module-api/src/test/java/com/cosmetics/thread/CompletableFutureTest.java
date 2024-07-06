@@ -88,8 +88,10 @@ public class CompletableFutureTest {
     }
 
     /**
-     * 작업콜백 thenApply
+     * thenApply 콜백메서드가아니라, 그냥 다음 실행
      * 반환 값을 받아서 다른 값을 반환함
+     * 현재 CompletableFuture를 완료한 동일한 스레드를 사용하여 변환 함수를 실행
+     * 즉변환 함수가 장기 실행되거나 리소스를 많이 사용하는 경우 스레드를 차단할 가능성이 있음
      * 함수형 인터페이스 Function을 파라미터로 받음
      */
     @Test
@@ -133,7 +135,7 @@ public class CompletableFutureTest {
 
 
     /**
-     * 작업콜백 thenApply
+     * thenAccept
      * 반환 값을 받아서 처리하고 값을 반환하지 않음
      * 함수형 인터페이스 Customer를 파라미터로 받음
      */
@@ -291,7 +293,13 @@ public class CompletableFutureTest {
         System.out.println(future.get());
     }
     /**
-     * 비동기 처리는 get을 안사용하고 콜백을 통해 하는게 맞지!
+     * callback이 아니다! 오히려 체이닝에 가까움
+     *
+     * 대조적으로 thenApplyAsync()는 일반적으로 ForkJoinPool.commonPool() 인 실행자 풀의 스레드를 활용하여 제공된 함수의 비동기 실행을 보장
+     * supplyAsync가 스레드가 A라면 thenApplyAsync 는 스레드 A일수도잇고 스레드 B일수도있다. 즉 스레드를 계속 나누는거임
+     * 이를 통해 함수가 비동기적으로 실행되고 별도의 스레드에서 실행될 수 있으므로 현재 스레드의 차단을 방지할 수 있음
+     * 걍 비동기 함수로 쓰레드로 나누는 것
+     *
      * */
     @Test
     public void thenApplyAsync() throws ExecutionException, InterruptedException {
