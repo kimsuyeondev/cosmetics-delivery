@@ -1,6 +1,7 @@
-package com.cosmetics.api.sample.controller;
+package com.cosmetics.api.controller;
 
 import com.cosmetics.domain.sample.dto.Sample;
+import com.cosmetics.domain.sample.service.AsyncService;
 import com.cosmetics.domain.sample.service.SampleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,8 @@ public class SampleController {
 
     @Autowired
     private SampleService sampleService;
+    private AsyncService asyncService;
+
     @GetMapping("/hello")
     public Sample getHelloCosmetics() {
         Sample say = sampleService.getSample();
@@ -27,5 +30,16 @@ public class SampleController {
         ObjectMapper mapper = new ObjectMapper();
         String str = mapper.writeValueAsString("{\"say\": \"hello\" }");
         return str;
+    }
+
+    @GetMapping("asyncTest")
+    public void asyncTest() throws InterruptedException {
+        for(int i=0; i<1000; i++){
+            asyncService.customThread("a",i);
+        }
+
+        for(int i=0; i<1000; i++){
+            asyncService.customThread("b",i);
+        }
     }
 }
