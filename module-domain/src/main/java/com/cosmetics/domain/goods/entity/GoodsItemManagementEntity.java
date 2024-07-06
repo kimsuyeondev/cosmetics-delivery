@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-@Table(name = "PV_ITEM")
+@Table(name = "pv_item")
 public class GoodsItemManagementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
