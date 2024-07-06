@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-@Table(name = "MB_MEMBER")
+@Table(name = "mb_member")
 public class MemberManagementEntity {
 
     @Id
