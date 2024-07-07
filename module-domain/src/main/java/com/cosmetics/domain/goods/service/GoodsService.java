@@ -3,12 +3,11 @@ package com.cosmetics.domain.goods.service;
 import com.cosmetics.domain.goods.dto.GoodsManagement;
 import com.cosmetics.domain.goods.entity.GoodsManagementEntity;
 import com.cosmetics.domain.goods.repository.GoodsRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
