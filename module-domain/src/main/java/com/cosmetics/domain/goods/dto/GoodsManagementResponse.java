@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GoodsManagementResponse extends ResponseDto {
-
     private Long goodsNo;
     private String category;
     private String goodsNm;
