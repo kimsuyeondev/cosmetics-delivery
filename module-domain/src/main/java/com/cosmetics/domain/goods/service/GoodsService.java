@@ -20,12 +20,11 @@ public class GoodsService {
 
     @Transactional
     public CompletableFuture<GoodsManagement> findByGoodsNo(Long goodsNo) {
-        CompletableFuture<GoodsManagement> goodsManageFuture = CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             log.error("GoodsService Thread = {}", Thread.currentThread().getName());
             GoodsManagementEntity goodsManagementEntity =  goodsRepository.findByGoodsNo(goodsNo).orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
             return GoodsManagement.fromEntity(goodsManagementEntity);
         });
-        return goodsManageFuture;
     }
 
     @Transactional
